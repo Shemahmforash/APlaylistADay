@@ -1,4 +1,4 @@
-package PlaylistADay::Example;
+package APlaylistADay::Example;
 use Mojo::Base 'Mojolicious::Controller';
 
 # This action will render a template
