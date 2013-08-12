@@ -1,0 +1,5 @@
+events:
+    uri: "http://wanderer-red-laptop/dayinmusic/examples/json.php"
+
+playlist:
+    max: 10

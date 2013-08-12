@@ -3,16 +3,26 @@ use Mojo::Base 'Mojolicious';
 
 # This method will run once at server start
 sub startup {
-  my $self = shift;
+    my $self = shift;
 
-  # Documentation browser under "/perldoc"
-  $self->plugin('PODRenderer');
+    # Documentation browser under "/perldoc"
+    $self->plugin('PODRenderer');
 
-  # Router
-  my $r = $self->routes;
+    # Everything can be customized with options
+    my $config = $self->plugin(
+        yaml_config => {
+            file      => 'etc/config.yaml',
+            stash_key => 'conf',
+            class     => 'YAML::XS'
+        }
+    );
+    $self->{'config'} = $config;
 
-  # Normal route to controller
-  $r->get('/')->to('example#welcome');
+    # Router
+    my $r = $self->routes;
+
+    # Normal route to controller
+    $r->get('/')->to('example#welcome');
 }
 
 1;
