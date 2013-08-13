@@ -1,4 +1,4 @@
-package Track;
+package APlaylistADay::Track;
 
 use Moose;
 
