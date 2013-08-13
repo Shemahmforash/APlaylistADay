@@ -1,5 +1,5 @@
 events:
-    url: "http://wanderer-red-laptop/dayinmusic/examples/json.php"
+    url: "http://icdif.com/thisdayinmusic/events/"
 
 playlist:
     max: 10

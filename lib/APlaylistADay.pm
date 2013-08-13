@@ -23,6 +23,9 @@ sub startup {
 
     # Normal route to controller
     $r->get('/')->to('example#welcome');
+
+    $r->get('/events/')->to('events#get');
+    $r->get('/events/:day/:month')->to('events#get');
 }
 
 1;
