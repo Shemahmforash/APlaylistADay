@@ -1,5 +1,9 @@
 events:
     url: "http://icdif.com/thisdayinmusic/events/"
 
+echonest:
+    key: "2FOIUUMCRLFMAWJXT"
+    extract: "http://developer.echonest.com/api/v4/artist/extract"
+
 playlist:
     max: 10
