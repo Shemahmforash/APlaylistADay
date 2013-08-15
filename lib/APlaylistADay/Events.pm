@@ -38,17 +38,12 @@ sub get {
             my $video = $self->_find_artist_video( $artist->{'name'} );
             $event->{'video'} = $video
                 if defined $video && ref $video eq 'HASH';
-
-            push @results, $event;
         }
+
+        push @results, $event;
     }
 
-    my $message = "Events";
-    if ( defined $day && defined $month ) {
-        $message = sprintf( '%s for %s of %s', $message, $day, $month );
-    }
-
-    $self->render( message => $message );
+    $self->render( 'results' => \@results );
 }
 
 #find youtube video for an artist

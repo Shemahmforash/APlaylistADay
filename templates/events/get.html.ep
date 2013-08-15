@@ -1,10 +1,16 @@
 % layout 'default';
-% title 'Welcome';
-<h2><%= $message %></h2>
-This page was generated from the template
-"templates/example/welcome.html.ep" and the layout
-"templates/layouts/default.html.ep",
-<a href="<%== url_for %>">click here</a>
-to reload the page or
-<a href="/index.html">here</a>
-to move forward to a static page.
+% title 'Events';
+
+<ul>
+% for my $result (@$results) {
+    <li>
+        <%= $result->{'year'} %> - <%= $result->{'description'} %>.
+
+%       if( $result->{'video'}->{'id'}) {
+        <iframe id="ytplayer" type="text/html" width="640" height="390"
+        src="http://www.youtube.com/embed/<%= $result->{'video'}->{'id'} %>"
+            frameborder="0"/></iframe>
+%       }
+    </li>
+% }
+</ul>
