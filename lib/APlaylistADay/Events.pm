@@ -21,7 +21,8 @@ sub get {
         $self->app->{config}->{'echonest'}->{'extract'},
         $self->app->{config}->{'echonest'}->{'key'}
     );
-    my @artists;
+
+    my @results;
     for my $event ( @{ $events || [] } ) {
         my $url = sprintf( '%s&text=%s', $base, $event->{'description'} );
 
@@ -30,12 +31,17 @@ sub get {
 
         #no error in call
         if ( $result->{'response'}->{'status'}->{'code'} == 0 ) {
-            push @artists, pop $result->{'response'}->{'artists'};
+            my $artist = pop $result->{'response'}->{'artists'};
+
+            $event->{'artist'} = $artist;
+
+            my $video = $self->_find_artist_video( $artist->{'name'} );
+            $event->{'video'} = $video
+                if defined $video && ref $video eq 'HASH';
+
+            push @results, $event;
         }
     }
-
-    #TODO: generate playlist from the artists
-    #check: https://developers.google.com/youtube/v3/
 
     my $message = "Events";
     if ( defined $day && defined $month ) {
@@ -43,6 +49,37 @@ sub get {
     }
 
     $self->render( message => $message );
+}
+
+#find youtube video for an artist
+sub _find_artist_video {
+    my $self   = shift;
+    my $artist = shift;
+
+    my $url = sprintf(
+        '%s?part=snippet&maxResults=1&order=relevance&q=%s&type=video&videoCaption=any&videoSyndicated=true&key=%s',
+        $self->app->{'config'}->{'youtube'}->{'search'},
+        $artist, $self->app->{'config'}->{'youtube'}->{'key'}
+    );
+
+    my $ua   = Mojo::UserAgent->new;
+    my $json = $ua->get($url);
+
+    my $results = $json->res->json;
+
+    if ( my $items = $results->{'items'} ) {
+        my $item = shift @{$items};
+
+        my $id = $item->{'id'}->{'videoId'};
+        return {
+            'id'          => $id,
+            'title'       => $item->{'snippet'}->{'title'},
+            'description' => $item->{'snippet'}->{'description'},
+            'url' => sprintf( 'http://www.youtube.com/watch?v=%s', $id ),
+        };
+    }
+
+    return;
 }
 
 1;

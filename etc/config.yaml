@@ -5,5 +5,9 @@ echonest:
     key: "2FOIUUMCRLFMAWJXT"
     extract: "http://developer.echonest.com/api/v4/artist/extract"
 
+youtube:
+    search: "https://www.googleapis.com/youtube/v3/search"
+    key: "AIzaSyD50sJyFXZHBBvBUbmEwaS4elZOCVE7wMU" 
+
 playlist:
     max: 10
