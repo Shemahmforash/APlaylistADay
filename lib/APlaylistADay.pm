@@ -21,9 +21,6 @@ sub startup {
     # Router
     my $r = $self->routes;
 
-    # Normal route to controller
-    $r->get('/')->to('example#welcome');
-
     $r->get('/events/')->to('events#get');
     $r->get('/events/:day/:month')->to('events#get');
 }

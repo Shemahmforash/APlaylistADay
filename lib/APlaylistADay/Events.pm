@@ -24,26 +24,51 @@ sub get {
 
     my @results;
     for my $event ( @{ $events || [] } ) {
-        my $url = sprintf( '%s&text=%s', $base, $event->{'description'} );
+        my $artist = $self->_find_event_artist($event);
+        next unless $artist;
 
-        $json = $ua->get($url);
-        my $result = $json->res->json;
+        $event->{'artist'} = $artist;
 
-        #no error in call
-        if ( $result->{'response'}->{'status'}->{'code'} == 0 ) {
-            my $artist = pop $result->{'response'}->{'artists'};
-
-            $event->{'artist'} = $artist;
-
-            my $video = $self->_find_artist_video( $artist->{'name'} );
-            $event->{'video'} = $video
-                if defined $video && ref $video eq 'HASH';
-        }
+        my $video = $self->_find_artist_video( $artist->{'name'} );
+        $event->{'video'} = $video
+            if defined $video && ref $video eq 'HASH';
 
         push @results, $event;
     }
 
-    $self->render( 'results' => \@results );
+    #respond to several content-types
+    $self->respond_to(
+        json => { json => \@results },
+        html => sub {
+            $self->render( 'results' => \@results );
+        },
+        any => { text => '', status => 204 }
+    );
+}
+
+sub _find_event_artist {
+    my $self  = shift;
+    my $event = shift;
+
+    my $url = sprintf(
+        "%s?api_key=%s&format=json&results=1&text=%s",
+        $self->app->{config}->{'echonest'}->{'extract'},
+        $self->app->{config}->{'echonest'}->{'key'},
+        $event->{'description'},
+    );
+
+    my $ua     = Mojo::UserAgent->new;
+    my $json   = $ua->get($url);
+    my $result = $json->res->json;
+
+    #no error in call
+    if ( $result->{'response'}->{'status'}->{'code'} == 0 ) {
+        my $artist = pop $result->{'response'}->{'artists'};
+
+        return $artist;
+    }
+
+    return;
 }
 
 #find youtube video for an artist
