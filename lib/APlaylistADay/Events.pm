@@ -8,20 +8,20 @@ use Data::Dumper;
 sub get {
     my $self = shift;
 
+    my $event_url = $self->app->{config}->{'events'}->{'url'};
+
     my ( $day, $month ) = ( $self->stash('day'), $self->stash('month') );
+    if ( defined $day && defined $month ) {
+        $event_url
+            = sprintf( '%s?day=%s&month=%s', $event_url, $day, $month );
+    }
 
     # Fresh user agent
     my $ua     = Mojo::UserAgent->new;
-    my $json   = $ua->get( $self->app->{config}->{'events'}->{'url'} );
+    my $json   = $ua->get($event_url);
     my $events = $json->res->json;
 
     #for each event, try to find an artist using echonest
-    my $base = sprintf(
-        "%s?api_key=%s&format=json&results=1",
-        $self->app->{config}->{'echonest'}->{'extract'},
-        $self->app->{config}->{'echonest'}->{'key'}
-    );
-
     my @results;
     for my $event ( @{ $events || [] } ) {
         my $artist = $self->_find_event_artist($event);
@@ -46,6 +46,7 @@ sub get {
     );
 }
 
+#find most probable artist names in a string
 sub _find_event_artist {
     my $self  = shift;
     my $event = shift;
