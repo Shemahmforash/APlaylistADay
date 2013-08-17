@@ -26,15 +26,15 @@ sub get {
     my @results;
     for my $event ( @{ $events || [] } ) {
         my $artist = $self->_find_event_artist($event);
-        next unless ref $artist eq 'HASH' && $artist->{'id'};
+        next unless ref $artist eq 'HASH';
 
-        my $id = $artist->{'id'};
-
-#save the number of times the same artist has already been found in the events list
+        my $key = $artist->{'id'} ? $artist->{'id'} : $artist->{'name'};
+        #save the number of times the same artist has already been found
+        $artists{$key}++;
         $event->{'artist'} = $artist;
-        $artists{$id}++;
 
-        my $video = $self->_find_artist_video( $id, $artists{$id} );
+        my $video = $self->_find_artist_video( $artist, $artists{$key}, $artist->{'id'} ? 0 : 1 );
+
         $event->{'video'} = $video
             if defined $video && ref $video eq 'HASH';
 
@@ -56,12 +56,17 @@ sub _find_event_artist {
     my $self  = shift;
     my $event = shift;
 
+    #if one has the name of the artist, return it right away
+    return { 'name' => $event->{'name'} }
+        if $event->{'name'};
+
+    my $text = $event->{'description'};
+
     #find artists in string, ordered by hottness
     my $url = sprintf(
         "%s?api_key=%s&format=json&results=1&sort=hotttnesss-desc&text=%s",
         $self->app->{config}->{'echonest'}->{'extract'},
-        $self->app->{config}->{'echonest'}->{'key'},
-        $event->{'description'},
+        $self->app->{config}->{'echonest'}->{'key'}, $text,
     );
 
     my $ua     = Mojo::UserAgent->new;
@@ -74,25 +79,38 @@ sub _find_event_artist {
 
         return $artist;
     }
+    else {
+        my $log = Mojo::Log->new;
+        $log->error( 'Error connecting to echonest: '
+                . $result->{'response'}->{'status'}->{'message'} );
+    }
 
     return;
 }
 
 #find video for an artist using echonest api
 sub _find_artist_video {
-    my $self   = shift;
-    my $artist = shift;
-    my $start  = shift;
+    my $self     = shift;
+    my $artist   = shift;
+    my $start    = shift;
+    my $use_name = shift || 0;
+
+    my $key   = 'id';
+    my $value = $artist->{'id'};
+    if ($use_name) {
+        $key   = 'name';
+        $value = $artist->{'name'};
+    }
 
     #in order to avoid the same video for the artist in the events list
     $start = defined $start ? $start : 0;
 
     # most recent videos found on the web related to the artist
     my $url = sprintf(
-        "%s?api_key=%s&format=json&start=%s&id=%s&results=1",
+        "%s?api_key=%s&format=json&start=%s&%s=%s&results=1",
         $self->app->{config}->{'echonest'}->{'video'},
         $self->app->{config}->{'echonest'}->{'key'},
-        $start, $artist,
+        $start, $key, $value,
     );
 
     my $ua     = Mojo::UserAgent->new;
@@ -100,12 +118,18 @@ sub _find_artist_video {
     my $result = $json->res->json;
 
     if ( $result->{'response'}->{'status'}->{'code'} == 0 ) {
-        my $video = shift $result->{'response'}->{'video'};
+        my $video = shift $result->{'response'}->{'video'}
+            || return;
 
         if ( $video->{'url'} =~ m/v\=(\w+)\&/ ) {
             $video->{'id'} = $1;
             return $video;
         }
+    }
+    else {
+        my $log = Mojo::Log->new;
+        $log->error( 'Error connecting to echonest: '
+                . $result->{'response'}->{'status'}->{'message'} );
     }
     return;
 }
