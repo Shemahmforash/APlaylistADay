@@ -22,14 +22,19 @@ sub get {
     my $events = $json->res->json;
 
     #for each event, try to find an artist using echonest
+    my %artists;
     my @results;
     for my $event ( @{ $events || [] } ) {
         my $artist = $self->_find_event_artist($event);
-        next unless $artist;
+        next unless ref $artist eq 'HASH' && $artist->{'id'};
 
+        my $id = $artist->{'id'};
+
+#save the number of times the same artist has already been found in the events list
         $event->{'artist'} = $artist;
+        $artists{$id}++;
 
-        my $video = $self->_find_artist_video( $artist->{'name'} );
+        my $video = $self->_find_artist_video( $id, $artists{$id} );
         $event->{'video'} = $video
             if defined $video && ref $video eq 'HASH';
 
@@ -51,8 +56,9 @@ sub _find_event_artist {
     my $self  = shift;
     my $event = shift;
 
+    #find artists in string, ordered by hottness
     my $url = sprintf(
-        "%s?api_key=%s&format=json&results=1&text=%s",
+        "%s?api_key=%s&format=json&results=1&sort=hotttnesss-desc&text=%s",
         $self->app->{config}->{'echonest'}->{'extract'},
         $self->app->{config}->{'echonest'}->{'key'},
         $event->{'description'},
@@ -64,7 +70,7 @@ sub _find_event_artist {
 
     #no error in call
     if ( $result->{'response'}->{'status'}->{'code'} == 0 ) {
-        my $artist = pop $result->{'response'}->{'artists'};
+        my $artist = shift $result->{'response'}->{'artists'};
 
         return $artist;
     }
@@ -72,34 +78,35 @@ sub _find_event_artist {
     return;
 }
 
-#find youtube video for an artist
+#find video for an artist using echonest api
 sub _find_artist_video {
     my $self   = shift;
     my $artist = shift;
+    my $start  = shift;
 
+    #in order to avoid the same video for the artist in the events list
+    $start = defined $start ? $start : 0;
+
+    # most recent videos found on the web related to the artist
     my $url = sprintf(
-        '%s?part=snippet&maxResults=1&order=relevance&q=%s&type=video&videoCaption=any&videoSyndicated=true&key=%s',
-        $self->app->{'config'}->{'youtube'}->{'search'},
-        $artist, $self->app->{'config'}->{'youtube'}->{'key'}
+        "%s?api_key=%s&format=json&start=%s&id=%s&results=1",
+        $self->app->{config}->{'echonest'}->{'video'},
+        $self->app->{config}->{'echonest'}->{'key'},
+        $start, $artist,
     );
 
-    my $ua   = Mojo::UserAgent->new;
-    my $json = $ua->get($url);
+    my $ua     = Mojo::UserAgent->new;
+    my $json   = $ua->get($url);
+    my $result = $json->res->json;
 
-    my $results = $json->res->json;
+    if ( $result->{'response'}->{'status'}->{'code'} == 0 ) {
+        my $video = shift $result->{'response'}->{'video'};
 
-    if ( my $items = $results->{'items'} ) {
-        #use the first result returned
-        my $item = shift @{$items};
-
-        my $id = $item->{'id'}->{'videoId'};
-        return {
-            'id'          => $id,
-            'title'       => $item->{'snippet'}->{'title'},
-            'description' => $item->{'snippet'}->{'description'},
-        };
+        if ( $video->{'url'} =~ m/v\=(\w+)\&/ ) {
+            $video->{'id'} = $1;
+            return $video;
+        }
     }
-
     return;
 }
 

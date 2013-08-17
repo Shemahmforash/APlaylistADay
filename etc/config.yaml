@@ -4,6 +4,7 @@ events:
 echonest:
     key: "2FOIUUMCRLFMAWJXT"
     extract: "http://developer.echonest.com/api/v4/artist/extract"
+    video: "http://developer.echonest.com/api/v4/artist/video"
 
 youtube:
     search: "https://www.googleapis.com/youtube/v3/search"

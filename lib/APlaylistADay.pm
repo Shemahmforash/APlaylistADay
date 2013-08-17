@@ -5,10 +5,7 @@ use Mojo::Base 'Mojolicious';
 sub startup {
     my $self = shift;
 
-    # Documentation browser under "/perldoc"
-    $self->plugin('PODRenderer');
-
-    # Everything can be customized with options
+    #keep application config
     my $config = $self->plugin(
         yaml_config => {
             file      => 'etc/config.yaml',
@@ -21,6 +18,8 @@ sub startup {
     # Router
     my $r = $self->routes;
 
+    #all routes available
+    $r->get('/')->to('events#get');
     $r->get('/events/')->to('events#get');
     $r->get('/events/:day/:month')->to('events#get');
 }
