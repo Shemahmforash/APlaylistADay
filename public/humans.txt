@@ -3,13 +3,10 @@
 
 # TEAM
 
-    <name> -- <role> -- <twitter>
-
-# THANKS
-
-    <name>
+    Shemahmforash -- developer -- shemahmforash
 
 # TECHNOLOGY COLOPHON
 
+    perl, mojolicious,
     HTML5, CSS3
     jQuery, Modernizr

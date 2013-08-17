@@ -89,6 +89,7 @@ sub _find_artist_video {
     my $results = $json->res->json;
 
     if ( my $items = $results->{'items'} ) {
+        #use the first result returned
         my $item = shift @{$items};
 
         my $id = $item->{'id'}->{'videoId'};
@@ -96,7 +97,6 @@ sub _find_artist_video {
             'id'          => $id,
             'title'       => $item->{'snippet'}->{'title'},
             'description' => $item->{'snippet'}->{'description'},
-            'url' => sprintf( 'http://www.youtube.com/watch?v=%s', $id ),
         };
     }
 

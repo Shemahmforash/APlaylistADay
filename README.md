@@ -1,7 +1,12 @@
 APlaylistADay
 =============
 
-A web app that each day generates a new playlist with songs based on events that happened on this day in history/music.
+A web app and service that each day generates a new playlist with songs based on events that happened on this day in history/music.
+
+#Flow
+* Finds events that happened in a particular day in the history of music
+* Finds an artist for each of the events
+* Generates a song for each of the artists
 
 #Requirements
  It requires the following perl packages that you can find on cpan:
@@ -20,3 +25,4 @@ A web app that each day generates a new playlist with songs based on events that
     `cd APlaylistADay`
  5. Run the application using:
     `morbo script/aplaylist_aday`
+ 6. Go to http://127.0.0.1:3000/ and see the program running
