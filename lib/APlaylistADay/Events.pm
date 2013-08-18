@@ -27,6 +27,7 @@ sub get {
 
     my $count = 0;
     for my $event ( @{ $events || [] } ) {
+
         #TODO: replace this with pagination
         last
             if $count == $self->app->{config}->{'playlist'}->{'max'};
@@ -40,8 +41,11 @@ sub get {
         $artists{$key}++;
         $event->{'artist'} = $artist;
 
-        my $video = $self->_find_artist_video( $artist, $artists{$key},
-            $artist->{'id'} ? 0 : 1 );
+      #        my $video = $self->_find_artist_video( $artist, $artists{$key},
+      #            $artist->{'id'} ? 0 : 1 );
+
+        my $video
+            = $self->_find_artist_video( $artist->{'name'}, $artists{$key} );
 
         $event->{'video'} = $video
             if defined $video && ref $video eq 'HASH';
@@ -97,8 +101,74 @@ sub _find_event_artist {
     return;
 }
 
-#find video for an artist using echonest api
 sub _find_artist_video {
+    my $self   = shift;
+    my $artist = shift;
+    my $start  = shift;
+
+    #in order to avoid the same video for the artist in the events list
+    $start = defined $start ? $start : 0;
+
+    #find topic related to artist
+    my $url = sprintf( "%s?query=%s&indent=true&lang=en",
+        $self->app->{config}->{'google'}->{'freebase'}->{'search'}, $artist,
+    );
+
+    my $ua     = Mojo::UserAgent->new;
+    my $json   = $ua->get($url);
+    my $result = $json->res->json;
+
+    return
+        unless $result->{'hits'};
+
+    my @results = @{ $result->{'result'} || [] };
+
+    my $result;
+    while ( scalar @results ) {
+        $result = shift @results;
+
+        #only topics related to music are accepted
+        last
+            if $result->{'notable'}->{'name'} =~ /artist|musical group/i;
+    }
+
+    return
+        unless ref $result eq 'HASH' && $result->{'mid'};
+
+#find video of topic
+#TODO: add some sort of randomness to avoid the same video appearing always for the same artist
+    $url = sprintf(
+        "%s?key=%s&part=snippet&topicId=%s&type=video",
+        $self->app->{config}->{'google'}->{'youtube'}->{'search'},
+        $self->app->{config}->{'google'}->{'key'},
+        $result->{'mid'},
+    );
+
+    $ua     = Mojo::UserAgent->new;
+    $json   = $ua->get($url);
+    $result = $json->res->json;
+
+    return unless scalar @{ $result->{'items'} };
+
+    my @items = @{ $result->{'items'} || [] };
+
+    my $item = shift @items;
+
+#avoid repetition of videos when the same artist appears several times in the event list
+    if ( $start && $items[$start] ) {
+        $item = $items[$start];
+    }
+
+    my $id = $item->{'id'}->{'videoId'};
+    return {
+        'id'          => $id,
+        'title'       => $item->{'snippet'}->{'title'},
+        'description' => $item->{'snippet'}->{'description'},
+    };
+}
+
+#find video for an artist using echonest api
+sub _find_artist_video_old {
     my $self     = shift;
     my $artist   = shift;
     my $start    = shift;

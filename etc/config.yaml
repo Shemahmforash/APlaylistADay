@@ -6,9 +6,12 @@ echonest:
     extract: "http://developer.echonest.com/api/v4/artist/extract"
     video: "http://developer.echonest.com/api/v4/artist/video"
 
-youtube:
-    search: "https://www.googleapis.com/youtube/v3/search"
+google:
     key: "AIzaSyD50sJyFXZHBBvBUbmEwaS4elZOCVE7wMU" 
+    freebase:
+        search: "https://www.googleapis.com/freebase/v1/search"
+    youtube:
+        search: "https://www.googleapis.com/youtube/v3/search"
 
 playlist:
     max: 10
