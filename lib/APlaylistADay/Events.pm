@@ -24,20 +24,29 @@ sub get {
     #for each event, try to find an artist using echonest
     my %artists;
     my @results;
+
+    my $count = 0;
     for my $event ( @{ $events || [] } ) {
+        #TODO: replace this with pagination
+        last
+            if $count == $self->app->{config}->{'playlist'}->{'max'};
+
         my $artist = $self->_find_event_artist($event);
         next unless ref $artist eq 'HASH';
 
         my $key = $artist->{'id'} ? $artist->{'id'} : $artist->{'name'};
+
         #save the number of times the same artist has already been found
         $artists{$key}++;
         $event->{'artist'} = $artist;
 
-        my $video = $self->_find_artist_video( $artist, $artists{$key}, $artist->{'id'} ? 0 : 1 );
+        my $video = $self->_find_artist_video( $artist, $artists{$key},
+            $artist->{'id'} ? 0 : 1 );
 
         $event->{'video'} = $video
             if defined $video && ref $video eq 'HASH';
 
+        $count++;
         push @results, $event;
     }
 
@@ -56,7 +65,7 @@ sub _find_event_artist {
     my $self  = shift;
     my $event = shift;
 
-    #if one has the name of the artist, return it right away
+    #if one has the name of the artist, there's no need to use the API
     return { 'name' => $event->{'name'} }
         if $event->{'name'};
 
