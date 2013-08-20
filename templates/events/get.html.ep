@@ -13,9 +13,7 @@
 %       if( $result->{'type'} eq 'Birth' ) {
             , was born
 %       }
-
 .
-
 
 %       if( $result->{'video'}->{'id'}) {
         <iframe id="ytplayer" type="text/html" width="640" height="390"

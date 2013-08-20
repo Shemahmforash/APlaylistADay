@@ -1,7 +1,8 @@
 package APlaylistADay::Events;
 
 use Mojo::Base 'Mojolicious::Controller';
-use Mojo::UserAgent;
+use Mojo::UserAgent ();
+use URI::Escape     ();
 
 use Data::Dumper;
 
@@ -73,7 +74,7 @@ sub _find_event_artist {
     return { 'name' => $event->{'name'} }
         if $event->{'name'};
 
-    my $text = $event->{'description'};
+    my $text = URI::Escape::uri_escape( $event->{'description'} );
 
     #find artists in string, ordered by hottness
     my $url = sprintf(
@@ -106,6 +107,8 @@ sub _find_artist_video {
     my $artist = shift;
     my $start  = shift;
 
+    $artist = URI::Escape::uri_escape($artist);
+
     #in order to avoid the same video for the artist in the events list
     $start = defined $start ? $start : 0;
 
@@ -123,17 +126,19 @@ sub _find_artist_video {
 
     my @results = @{ $result->{'result'} || [] };
 
-    my $result;
+    my $topic;
     while ( scalar @results ) {
-        $result = shift @results;
+        $topic = shift @results;
+
+        next unless ref $topic->{'notable'} eq 'HASH';
 
         #only topics related to music are accepted
         last
-            if $result->{'notable'}->{'name'} =~ /artist|musical group/i;
+            if $topic->{'notable'}->{'name'} =~ /artist|musical group/i;
     }
 
     return
-        unless ref $result eq 'HASH' && $result->{'mid'};
+        unless ref $topic eq 'HASH' && $topic->{'mid'};
 
 #find video of topic
 #TODO: add some sort of randomness to avoid the same video appearing always for the same artist
@@ -141,7 +146,7 @@ sub _find_artist_video {
         "%s?key=%s&part=snippet&topicId=%s&type=video",
         $self->app->{config}->{'google'}->{'youtube'}->{'search'},
         $self->app->{config}->{'google'}->{'key'},
-        $result->{'mid'},
+        $topic->{'mid'},
     );
 
     $ua     = Mojo::UserAgent->new;
@@ -152,11 +157,14 @@ sub _find_artist_video {
 
     my @items = @{ $result->{'items'} || [] };
 
-    my $item = shift @items;
+    my $item;
 
 #avoid repetition of videos when the same artist appears several times in the event list
     if ( $start && $items[$start] ) {
         $item = $items[$start];
+    }
+    else {
+        $item = shift @items;
     }
 
     my $id = $item->{'id'}->{'videoId'};
