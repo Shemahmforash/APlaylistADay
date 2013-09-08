@@ -30,8 +30,8 @@ sub get {
     for my $event ( @{ $events || [] } ) {
 
         #TODO: replace this with pagination
-        last
-            if $count == $self->app->{config}->{'playlist'}->{'max'};
+#        last
+#            if $count == $self->app->{config}->{'playlist'}->{'max'};
 
         my $artist = $self->_find_event_artist($event);
         next unless ref $artist eq 'HASH';
@@ -47,6 +47,8 @@ sub get {
 
         my $video
             = $self->_find_artist_video( $artist->{'name'}, $artists{$key} );
+
+        next unless $video;
 
         $event->{'video'} = $video
             if defined $video && ref $video eq 'HASH';
@@ -113,7 +115,7 @@ sub _find_artist_video {
     $start = defined $start ? $start : 0;
 
     #find topic related to artist
-    my $url = sprintf( "%s?query=%s&indent=true&lang=en",
+    my $url = sprintf( "%s?query=%s&indent=true&lang=en&type=music",
         $self->app->{config}->{'google'}->{'freebase'}->{'search'}, $artist,
     );
 
@@ -127,6 +129,9 @@ sub _find_artist_video {
     my @results = @{ $result->{'result'} || [] };
 
     my $topic;
+    $topic = shift @results;
+
+=for
     while ( scalar @results ) {
         $topic = shift @results;
 
@@ -136,6 +141,7 @@ sub _find_artist_video {
         last
             if $topic->{'notable'}->{'name'} =~ /artist|musical group/i;
     }
+=cut
 
     return
         unless ref $topic eq 'HASH' && $topic->{'mid'};

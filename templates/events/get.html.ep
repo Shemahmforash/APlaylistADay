@@ -7,13 +7,12 @@
         <%= $result->{'date'} %>
         -
 %       if( $result->{'name'} ) {
-            <%= $result->{'name'} %>, 
+            <%= $result->{'name'} %>,
 %       }
+
         <%= $result->{'description'} %>
-%       if( $result->{'type'} eq 'Birth' ) {
-            , was born
-%       }
-.
+
+        <%= $result->{'type'} eq 'Birth' ? ', was born.' : '.' =%>
 
 %       if( $result->{'video'}->{'id'}) {
         <iframe id="ytplayer" type="text/html" width="640" height="390"
