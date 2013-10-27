@@ -3,6 +3,7 @@ package APlaylistADay::Playlist;
 use DateTime;
 use Mojo::Base 'Mojolicious::Controller';
 use Moose;
+use MooseX::Privacy;
 
 use APlaylistADay::Event;
 
@@ -30,8 +31,9 @@ sub get {
         $self->stash('day'), $self->stash('month'), $self->stash('page') || 0
     );
 
-    my $events = $self->_find_events( 'day' => $day, 'month' => $month );
+    my $events = $self->find_events( 'day' => $day, 'month' => $month );
 
+    #splice list according to pagination values
     my @list = splice @{ $events || [] },
         $page * $self->app->{config}->{'playlist'}->{'pagesize'},
         $self->app->{config}->{'playlist'}->{'pagesize'};
@@ -76,7 +78,7 @@ sub get {
 
 }
 
-sub _find_events {
+private_method find_events => sub {
     my $self = shift;
     my %arg  = @_;
 
@@ -97,6 +99,6 @@ sub _find_events {
     my $events = $json->res->json;
 
     return $events;
-}
+};
 
 1;
