@@ -28,6 +28,12 @@ has 'artist' => (
     default => '',
 );
 
+has 'track' => (
+    is  => 'rw',
+    isa => 'APlaylistADay::Track',
+);
+
+#TODO: this variables should be received in the constructor from the app config
 has 'echonest_api_key' => (
     is        => 'ro',
     isa       => 'Str',
@@ -40,11 +46,6 @@ has 'echonest_extract' => (
     isa       => 'Str',
     traits    => [qw/Private/],
     'default' => 'http://developer.echonest.com/api/v4/artist/extract',
-);
-
-has 'track' => (
-    is     => 'rw',
-    isa    => 'APlaylistADay::Track',
 );
 
 sub BUILD {
@@ -63,7 +64,7 @@ sub BUILD {
 
         my $track = APlaylistADay::Track->new( 'artist' => $self->artist );
 
-        $self->track( $track );
+        $self->track($track);
     }
 }
 

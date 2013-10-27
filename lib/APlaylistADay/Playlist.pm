@@ -9,9 +9,11 @@ use APlaylistADay::Event;
 use Data::Dumper;
 
 has 'events' => (
-    is      => 'rw',
-    isa     => 'ArrayRef[Event]',
+    traits  => ['Array'],
+    is      => 'ro',
+    isa     => 'ArrayRef[APlaylistADay::Event]',
     default => sub { return [] },
+    handles => { add_event => 'push', }
 );
 
 has 'date' => (
@@ -52,7 +54,7 @@ sub get {
 
         my $event = APlaylistADay::Event->new(%param);
 
-        push @{ $self->events || [] }, $event;
+        $self->add_event($event);
 
         my $attr = {
             'date'        => $event->date,

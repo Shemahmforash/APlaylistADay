@@ -28,6 +28,7 @@ has 'id' => (
     isa => 'Str',
 );
 
+#TODO: this variables should be received in the constructor from the app config
 has 'echonest_api_key' => (
     is        => 'ro',
     isa       => 'Str',
@@ -47,7 +48,7 @@ sub BUILD {
 
     if ( $self->artist ) {
 
-        my $track = $self->find_track_video();
+        my $track = $self->find_track();
 
         if ($track) {
             $self->title( $track->{'title'} );
@@ -56,7 +57,8 @@ sub BUILD {
     }
 }
 
-private_method find_track_video => sub {
+#TODO: convert to youtube api search
+private_method find_track => sub {
     my $self = shift;
 
     return unless $self->artist;
