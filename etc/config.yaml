@@ -14,4 +14,4 @@ google:
         search: "https://www.googleapis.com/youtube/v3/search"
 
 playlist:
-    max: 10
+    pagesize: 5

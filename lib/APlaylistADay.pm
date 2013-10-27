@@ -19,9 +19,11 @@ sub startup {
     my $r = $self->routes;
 
     #all routes available
-    $r->get('/')->to('events#get');
-    $r->get('/events/')->to('events#get');
-    $r->get('/events/:day/:month')->to('events#get');
+    $r->get('/')->to('playlist#get');
+    $r->get('/:page')->to('playlist#get');
+    $r->get('/playlist/')->to('playlist#get');
+    $r->get('/playlist/:day/:month')->to('playlist#get');
+    $r->get('/playlist/:day/:month/:page')->to('playlist#get');
 }
 
 1;

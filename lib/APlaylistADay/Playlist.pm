@@ -1,13 +1,103 @@
 package APlaylistADay::Playlist;
 
+use DateTime;
+use Mojo::Base 'Mojolicious::Controller';
 use Moose;
 
-use namespage::autoclean;
+use APlaylistADay::Event;
 
-has 'tracks' => (
-    is      => 'ro',
-    isa     => 'Array[Track]',
+use Data::Dumper;
+
+has 'events' => (
+    is      => 'rw',
+    isa     => 'ArrayRef[Event]',
+    default => sub { return [] },
 );
 
-no Moose;                          
-__PACKAGE__->meta->make_immutable;
+has 'date' => (
+    is      => 'ro',
+    isa     => 'DateTime',
+    default => sub { return DateTime->now() },
+);
+
+sub get {
+    my $self = shift;
+
+    #TODO: check validity of day and month, and set property of current class
+    my ( $day, $month, $page ) = (
+        $self->stash('day'), $self->stash('month'), $self->stash('page') || 0
+    );
+
+    my $events = $self->_find_events( 'day' => $day, 'month' => $month );
+
+    my @list = splice @{ $events || [] },
+        $page * $self->app->{config}->{'playlist'}->{'pagesize'},
+        $self->app->{config}->{'playlist'}->{'pagesize'};
+
+    my @results;
+    for my $element (@list) {
+        my $description = $element->{'description'};
+
+        $description = join( ' - ', $element->{'name'}, $description )
+            if $element->{'name'};
+
+        my %param = (
+            'type'        => $element->{'type'},
+            'date'        => $element->{'date'},
+            'description' => $description,
+        );
+
+        $param{'artist'} = $element->{'name'}
+            if $element->{'name'};
+
+        my $event = APlaylistADay::Event->new(%param);
+
+        push @{ $self->events || [] }, $event;
+
+        my $attr = {
+            'date'        => $event->date,
+            'name'        => $event->artist,
+            'description' => $event->description,
+            'type'        => $event->type,
+        };
+        $attr->{'video'} = $event->track->id
+            if $event->track;
+
+        push @results, $attr;
+    }
+
+    #respond to several content-types
+    $self->respond_to(
+        json => { json => \@results },
+        html => sub {
+            $self->render( 'results' => \@results );
+        },
+        any => { text => '', status => 204 }
+    );
+
+}
+
+sub _find_events {
+    my $self = shift;
+    my %arg  = @_;
+
+    my $day   = $arg{'day'};
+    my $month = $arg{'month'};
+
+    my $event_url = $self->app->{config}->{'events'}->{'url'};
+
+    if ( defined $day && defined $month ) {
+        $self->date( DateTime->new( 'day' => $day, 'month' => $month ) );
+        $event_url
+            = sprintf( '%s?day=%s&month=%s', $event_url, $day, $month );
+    }
+
+    # Fresh user agent
+    my $ua     = Mojo::UserAgent->new;
+    my $json   = $ua->get($event_url);
+    my $events = $json->res->json;
+
+    return $events;
+}
+
+1;
