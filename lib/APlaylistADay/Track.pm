@@ -43,6 +43,12 @@ has 'echonest_video' => (
     'default' => 'http://developer.echonest.com/api/v4/artist/video',
 );
 
+my $log = Mojo::Log->new;
+my $freebase_google_search_url
+    = 'https://www.googleapis.com/freebase/v1/search';
+my $youtube_search_url = 'https://www.googleapis.com/youtube/v3/search';
+my $google_api_key     = 'AIzaSyD50sJyFXZHBBvBUbmEwaS4elZOCVE7wMU';
+
 sub BUILD {
     my $self = shift;
 
@@ -57,8 +63,68 @@ sub BUILD {
     }
 }
 
-#TODO: convert to youtube api search
 private_method find_track => sub {
+    my $self = shift;
+    my $artist = shift || $self->artist;
+
+    return unless $artist;
+
+    $artist = URI::Escape::uri_escape($artist);
+
+    my $topic = $self->find_artist_topic($artist);
+
+    my $url = sprintf( "%s?key=%s&part=snippet&topicId=%s&type=video",
+        $youtube_search_url, $google_api_key, $topic, );
+
+    my $ua     = Mojo::UserAgent->new;
+    my $json   = $ua->get($url);
+    my $result = $json->res->json;
+
+    #no tracks found
+    return unless scalar @{ $result->{'items'} };
+
+    my $item = shift @{ $result->{'items'} || [] };
+
+    my %track = (
+        'id'    => $item->{'id'}->{'videoId'},
+        'title' => $item->{'snippet'}->{'title'},
+    );
+
+    $track{'title'} = join ' - ', $track{'title'},
+        $item->{'snippet'}->{'description'}
+        if $item->{'snippet'}->{'description'};
+
+    return \%track;
+};
+
+#finds the freebase topic related to the artist
+private_method find_artist_topic => sub {
+    my $self   = shift;
+    my $artist = shift;
+
+    #find topic related to artist
+    my $url = sprintf( "%s?query=%s&indent=true&lang=en&type=music",
+        $freebase_google_search_url, $artist, );
+
+    my $ua     = Mojo::UserAgent->new;
+    my $json   = $ua->get($url);
+    my $result = $json->res->json;
+
+    return
+        unless $result->{'hits'};
+
+    my @results = @{ $result->{'result'} || [] };
+
+    my $topic;
+    $topic = shift @results;
+
+    return
+        unless ref $topic eq 'HASH' && $topic->{'mid'};
+
+    return $topic->{'mid'};
+};
+
+private_method find_track_echonest => sub {
     my $self = shift;
 
     return unless $self->artist;
@@ -80,7 +146,6 @@ private_method find_track => sub {
         }
     }
 
-    my $log = Mojo::Log->new;
     $log->error( 'Error connecting to echonest: '
             . $result->{'response'}->{'status'}->{'message'} );
 

@@ -40,9 +40,6 @@ sub get {
     for my $element (@list) {
         my $description = $element->{'description'};
 
-        $description = join( ' - ', $element->{'name'}, $description )
-            if $element->{'name'};
-
         my %param = (
             'type'        => $element->{'type'},
             'date'        => $element->{'date'},
