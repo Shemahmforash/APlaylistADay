@@ -85,12 +85,13 @@ private_method find_events => sub {
     my $day   = $arg{'day'};
     my $month = $arg{'month'};
 
-    my $event_url = $self->app->{config}->{'events'}->{'url'};
+    my $event_url = sprintf( '%s?filters[]=Birth&filters[]=Death',
+        $self->app->{config}->{'events'}->{'url'} );
 
     if ( defined $day && defined $month ) {
         $self->date( DateTime->new( 'day' => $day, 'month' => $month ) );
         $event_url
-            = sprintf( '%s?day=%s&month=%s', $event_url, $day, $month );
+            = sprintf( '%s&day=%s&month=%s', $event_url, $day, $month );
     }
 
     # Fresh user agent
