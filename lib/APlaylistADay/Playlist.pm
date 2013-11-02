@@ -43,9 +43,12 @@ sub get {
         my $description = $element->{'description'};
 
         my %param = (
-            'type'        => $element->{'type'},
-            'date'        => $element->{'date'},
-            'description' => $description,
+            'type'             => $element->{'type'},
+            'date'             => $element->{'date'},
+            'description'      => $description,
+            'echonest_api_key' => $self->app->{config}->{'echonest'}->{'key'},
+            'echonest_extract' =>
+                $self->app->{config}->{'echonest'}->{'extract'},
         );
 
         $param{'artist'} = $element->{'name'}

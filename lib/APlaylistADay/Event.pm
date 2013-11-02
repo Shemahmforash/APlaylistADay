@@ -33,19 +33,18 @@ has 'track' => (
     isa => 'APlaylistADay::Track',
 );
 
-#TODO: this variables should be received in the constructor from the app config
 has 'echonest_api_key' => (
-    is        => 'ro',
-    isa       => 'Str',
-    traits    => [qw/Private/],
-    'default' => '2FOIUUMCRLFMAWJXT',
+    is       => 'ro',
+    isa      => 'Str',
+    traits   => [qw/Private/],
+    required => 1,
 );
 
 has 'echonest_extract' => (
-    is        => 'ro',
-    isa       => 'Str',
-    traits    => [qw/Private/],
-    'default' => 'http://developer.echonest.com/api/v4/artist/extract',
+    is       => 'ro',
+    isa      => 'Str',
+    traits   => [qw/Private/],
+    required => 1,
 );
 
 sub BUILD {
