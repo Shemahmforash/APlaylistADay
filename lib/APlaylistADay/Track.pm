@@ -28,6 +28,7 @@ has 'id' => (
     isa => 'Str',
 );
 
+=for
 #TODO: this variables should be received in the constructor from the app config
 has 'echonest_api_key' => (
     is        => 'ro',
@@ -42,12 +43,30 @@ has 'echonest_video' => (
     traits    => [qw/Private/],
     'default' => 'http://developer.echonest.com/api/v4/artist/video',
 );
+=cut
+
+has 'google_api_key' => (
+    is       => 'ro',
+    isa      => 'Str',
+    traits   => [qw/Private/],
+    required => 1,
+);
+
+has 'youtube_search_url' => (
+    is       => 'ro',
+    isa      => 'Str',
+    traits   => [qw/Private/],
+    required => 1,
+);
+
+has 'freebase_google_search_url' => (
+    is       => 'ro',
+    isa      => 'Str',
+    traits   => [qw/Private/],
+    required => 1,
+);
 
 my $log = Mojo::Log->new;
-my $freebase_google_search_url
-    = 'https://www.googleapis.com/freebase/v1/search';
-my $youtube_search_url = 'https://www.googleapis.com/youtube/v3/search';
-my $google_api_key     = 'AIzaSyD50sJyFXZHBBvBUbmEwaS4elZOCVE7wMU';
 
 sub BUILD {
     my $self = shift;
@@ -74,7 +93,7 @@ private_method find_track => sub {
     my $topic = $self->find_artist_topic($artist);
 
     my $url = sprintf( "%s?key=%s&part=snippet&topicId=%s&type=video",
-        $youtube_search_url, $google_api_key, $topic, );
+        $self->youtube_search_url, $self->google_api_key, $topic, );
 
     my $ua     = Mojo::UserAgent->new;
     my $json   = $ua->get($url);
@@ -104,7 +123,7 @@ private_method find_artist_topic => sub {
 
     #find topic related to artist
     my $url = sprintf( "%s?query=%s&indent=true&lang=en&type=music",
-        $freebase_google_search_url, $artist, );
+        $self->freebase_google_search_url, $artist, );
 
     my $ua     = Mojo::UserAgent->new;
     my $json   = $ua->get($url);
@@ -124,7 +143,8 @@ private_method find_artist_topic => sub {
     return $topic->{'mid'};
 };
 
-private_method find_track_echonest => sub {
+=for
+private_method find_track => sub {
     my $self = shift;
 
     return unless $self->artist;
@@ -151,6 +171,7 @@ private_method find_track_echonest => sub {
 
     return;
 };
+=cut
 
 no Moose;
 __PACKAGE__->meta->make_immutable;

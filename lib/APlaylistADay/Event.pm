@@ -47,6 +47,28 @@ has 'echonest_extract' => (
     required => 1,
 );
 
+#TODO: do not repeat this attributes in both Event and Track Classes
+has 'google_api_key' => (
+    is       => 'ro',
+    isa      => 'Str',
+    traits   => [qw/Private/],
+    required => 1,
+);
+
+has 'youtube_search_url' => (
+    is       => 'ro',
+    isa      => 'Str',
+    traits   => [qw/Private/],
+    required => 1,
+);
+
+has 'freebase_google_search_url' => (
+    is       => 'ro',
+    isa      => 'Str',
+    traits   => [qw/Private/],
+    required => 1,
+);
+
 sub BUILD {
     my $self = shift;
 
@@ -61,7 +83,12 @@ sub BUILD {
 
     if ( $self->artist ) {
 
-        my $track = APlaylistADay::Track->new( 'artist' => $self->artist );
+        my $track = APlaylistADay::Track->new(
+            'artist'                     => $self->artist,
+            'google_api_key'             => $self->google_api_key,
+            'youtube_search_url'         => $self->youtube_search_url,
+            'freebase_google_search_url' => $self->freebase_google_search_url
+        );
 
         $self->track($track);
     }

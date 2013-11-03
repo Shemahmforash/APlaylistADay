@@ -49,6 +49,11 @@ sub get {
             'echonest_api_key' => $self->app->{config}->{'echonest'}->{'key'},
             'echonest_extract' =>
                 $self->app->{config}->{'echonest'}->{'extract'},
+            'google_api_key' => $self->app->{config}->{'google'}->{'key'},
+            'youtube_search_url' =>
+                $self->app->{config}->{'google'}->{'youtube'}->{'search'},
+            'freebase_google_search_url' =>
+                $self->app->{config}->{'google'}->{'freebase'}->{'search'},
         );
 
         $param{'artist'} = $element->{'name'}
