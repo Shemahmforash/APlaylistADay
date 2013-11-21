@@ -22,7 +22,7 @@ A web app and service that each day generates a new playlist with songs based on
  1. Install cpanminus. On a Debian-based Linux distribution you can do:
      `sudo apt-get install cpanminus`
  2. Install every perl module in the requirements section using cpanminus
-    `sudo cpanm Mojolicious YAML::XS Mojolicious::Plugin::YamlConfig Moose MooseX::Privacy`
+    `sudo cpanm Mojolicious YAML::XS Mojolicious::Plugin::YamlConfig Moose MooseX::Privacy JSON LWP::UserAgent`
  3. Clone this project:
     `git clone https://github.com/Shemahmforash/APlaylistADay.git`
  4. Change to the directory of the application:
