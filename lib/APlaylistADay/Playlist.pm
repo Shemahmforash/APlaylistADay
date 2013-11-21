@@ -4,6 +4,8 @@ use DateTime;
 use Mojo::Base 'Mojolicious::Controller';
 use Moose;
 use MooseX::Privacy;
+use WebService::EchoNest ();
+use API::ThisDayInMusic;
 
 use APlaylistADay::Event;
 
@@ -93,6 +95,28 @@ private_method find_events => sub {
     my $day   = $arg{'day'};
     my $month = $arg{'month'};
 
+    my $dayinmusic = API::ThisDayInMusic->new();
+    my $events = $dayinmusic->get('day' => $day, 'month' => $month);
+
+    return $events;
+
+
+=for
+    my $echonest = WebService::EchoNest->new(
+        api_key => $self->app->{config}->{'echonest'}->{'key'}, );
+
+    my $data = $echonest->request(
+        'artist/extract',
+        'text'    => 'There is a special meaning to Rome songs.',
+        'sort'    => 'hotttnesss-desc',
+        'results' => 1,
+    );
+
+    die Dumper $data;
+=cut
+
+
+=for
     my $event_url = sprintf( '%s?filters[]=Birth&filters[]=Death',
         $self->app->{config}->{'events'}->{'url'} );
 
@@ -108,6 +132,7 @@ private_method find_events => sub {
     my $events = $json->res->json;
 
     return $events;
+=cut
 };
 
 1;
