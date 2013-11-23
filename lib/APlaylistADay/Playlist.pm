@@ -96,6 +96,7 @@ private_method find_events => sub {
     my $month = $arg{'month'};
 
     my $dayinmusic = WebService::ThisDayInMusic->new();
+    $dayinmusic->add_filters('Birth', 'Death');
     my $events = $dayinmusic->get('day' => $day, 'month' => $month);
 
     return $events;

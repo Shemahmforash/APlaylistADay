@@ -9,7 +9,7 @@ use Data::Dumper;
 
 use namespace::autoclean;
 
-has 'url' => (
+has 'base_url' => (
     is       => 'ro',
     isa      => 'Str',
     traits   => [qw/Private/],
@@ -24,7 +24,29 @@ has 'date' => (
     default => sub { return DateTime->now() },
 );
 
-#TODO: add filters
+has 'filters' => (
+    traits  => ['Array'],
+    is      => 'ro',
+    default => sub { return [] },
+    handles => { add_filters => 'push', }
+);
+
+#gets the full url
+sub url {
+    my $self = shift;
+
+    my $url = $self->base_url;
+
+    #add filters to the url
+    my @filters = @{ $self->filters };
+    if( scalar @filters ) {
+        for my $filter ( @filters ) {
+           $filter = sprintf('filters[]=%s', $filter);
+        }
+
+        $url = sprintf('%s?%s', $url, join( '&', @filters));
+    }
+}
 
 sub get {
     my $self  = shift;
