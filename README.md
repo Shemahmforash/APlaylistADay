@@ -15,6 +15,7 @@ A web app and service that each day generates a new playlist with songs based on
 * [Mojolicious::Plugin::YamlConfig](http://search.cpan.org/~data/Mojolicious-Plugin-YamlConfig-0.1.5/lib/Mojolicious/Plugin/YamlConfig.pm)
 * [Moose](http://search.cpan.org/~ether/Moose-2.1005/lib/Moose.pm)
 * [MooseX::Privacy](http://search.cpan.org/~franckc/MooseX-Privacy-0.05/lib/MooseX/Privacy.pm)
+* [WebService::EchoNest](http://search.cpan.org/~nickl/WebService-EchoNest-0.007/lib/WebService/EchoNest.pm)
 * [JSON](http://search.cpan.org/~makamaka/JSON-2.90/lib/JSON.pm)
 * [LWP::UserAgent](http://search.cpan.org/~gaas/libwww-perl-6.05/lib/LWP/UserAgent.pm)
 
@@ -22,7 +23,9 @@ A web app and service that each day generates a new playlist with songs based on
  1. Install cpanminus. On a Debian-based Linux distribution you can do:
      `sudo apt-get install cpanminus`
  2. Install every perl module in the requirements section using cpanminus
-    `sudo cpanm Mojolicious YAML::XS Mojolicious::Plugin::YamlConfig Moose MooseX::Privacy JSON LWP::UserAgent`
+```bash
+    sudo cpanm Mojolicious YAML::XS Mojolicious::Plugin::YamlConfig Moose MooseX::Privacy WebService::EchoNest JSON LWP::UserAgent
+```
  3. Clone this project:
     `git clone https://github.com/Shemahmforash/APlaylistADay.git`
  4. Change to the directory of the application:
