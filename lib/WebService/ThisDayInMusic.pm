@@ -4,6 +4,7 @@ use Moose;
 use MooseX::Privacy;
 use LWP::UserAgent;
 use JSON qw(decode_json);
+use Carp;
 
 use Data::Dumper;
 
@@ -46,6 +47,8 @@ sub url {
 
         $url = sprintf( '%s?%s', $url, join( '&', @filters ) );
     }
+
+    return $url;
 }
 
 sub get {
