@@ -17,6 +17,7 @@ has 'base_url' => (
     default  => 'https://www.googleapis.com/freebase/v1/search'
 );
 
+#make this class more general
 sub get {
     my $self = shift;
 
@@ -49,13 +50,8 @@ sub get {
 
     my @results = @{ $result->{'result'} || [] };
 
-    my $topic;
-    $topic = shift @results;
 
-    return
-        unless ref $topic eq 'HASH' && $topic->{'mid'};
-
-    return $topic->{'mid'};
+    return \@results;
 }
 
 no Moose;

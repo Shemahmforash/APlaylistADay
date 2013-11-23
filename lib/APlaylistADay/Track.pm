@@ -3,6 +3,8 @@ package APlaylistADay::Track;
 use Moose;
 use MooseX::Privacy;
 use Data::Dumper;
+use WebService::Google::Freebase;
+use WebService::Google::Youtube;
 
 use namespace::autoclean;
 
@@ -92,15 +94,13 @@ private_method find_track => sub {
 
     my $topic = $self->find_artist_topic($artist);
 
-    my $url = sprintf( "%s?key=%s&part=snippet&topicId=%s&type=video",
-        $self->youtube_search_url, $self->google_api_key, $topic, );
+    return unless $topic;
 
-    my $ua     = Mojo::UserAgent->new;
-    my $json   = $ua->get($url);
-    my $result = $json->res->json;
+    my $youtube = WebService::Google::Youtube->new('key' => $self->google_api_key);
 
-    #no tracks found
-    return unless scalar @{ $result->{'items'} };
+    my $result = $youtube->get('part' => 'snippet', 'topicId' => $topic, 'type' => 'video');
+
+    return unless $result && scalar @{ $result->{'items'} };
 
     my $item = shift @{ $result->{'items'} || [] };
 
@@ -121,21 +121,17 @@ private_method find_artist_topic => sub {
     my $self   = shift;
     my $artist = shift;
 
-    #find topic related to artist
-    my $url = sprintf( "%s?query=%s&indent=true&lang=en&type=music",
-        $self->freebase_google_search_url, $artist, );
+    my $freebase = WebService::Google::Freebase->new();
 
-    my $ua     = Mojo::UserAgent->new;
-    my $json   = $ua->get($url);
-    my $result = $json->res->json;
-
-    return
-        unless $result->{'hits'};
-
-    my @results = @{ $result->{'result'} || [] };
+    my $results = $freebase->get(
+        'query'   => $artist,
+        'lang'    => 'en',
+        'indent'  => 'true',
+        'filters' => '(any type:/music/artist)',
+    );
 
     my $topic;
-    $topic = shift @results;
+    $topic = shift @{ $results || [] };
 
     return
         unless ref $topic eq 'HASH' && $topic->{'mid'};
