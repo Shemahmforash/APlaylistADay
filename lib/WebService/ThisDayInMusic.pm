@@ -1,4 +1,4 @@
-package API::ThisDayInMusic;
+package WebService::ThisDayInMusic;
 
 use Moose;
 use MooseX::Privacy;

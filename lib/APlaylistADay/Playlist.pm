@@ -5,7 +5,7 @@ use Mojo::Base 'Mojolicious::Controller';
 use Moose;
 use MooseX::Privacy;
 use WebService::EchoNest ();
-use API::ThisDayInMusic;
+use WebService::ThisDayInMusic;
 
 use APlaylistADay::Event;
 
@@ -95,7 +95,7 @@ private_method find_events => sub {
     my $day   = $arg{'day'};
     my $month = $arg{'month'};
 
-    my $dayinmusic = API::ThisDayInMusic->new();
+    my $dayinmusic = WebService::ThisDayInMusic->new();
     my $events = $dayinmusic->get('day' => $day, 'month' => $month);
 
     return $events;
