@@ -99,29 +99,30 @@ private_method find_event_artist => sub {
 
     my $text = URI::Escape::uri_escape( $self->description() );
 
-    #find artists in string, ordered by hottness
-    my $url
-        = sprintf(
-        "%s?api_key=%s&format=json&results=1&sort=hotttnesss-desc&text=%s",
-        $self->echonest_extract, $self->echonest_api_key, $text, );
+    my $echonest = WebService::EchoNest->new(
+        api_key => $self->app->{config}->{'echonest'}->{'key'}, );
 
-    my $ua     = Mojo::UserAgent->new;
-    my $json   = $ua->get($url);
-    my $result = $json->res->json;
+    my $data = $echonest->request(
+        'artist/extract',
+        'text'    => $text,
+        'sort'    => 'hotttnesss-desc',
+        'results' => 1,
+        'format' => 'json',
+    );
 
-    #no error in call
-    if ( $result->{'response'}->{'status'}->{'code'} == 0 ) {
-        my $artist = shift $result->{'response'}->{'artists'};
+    my $artist;
+    if ( $data->{'response'}->{'status'}->{'code'} == 0 ) {
+        my $artist = shift $data->{'response'}->{'artists'};
 
-        return $artist->{'name'};
+        $artist = $artist->{'name'};
     }
     else {
         my $log = Mojo::Log->new;
         $log->error( 'Error connecting to echonest: '
-                . $result->{'response'}->{'status'}->{'message'} );
+                . $data->{'response'}->{'status'}->{'message'} );
     }
 
-    return;
+    return $artist;
 };
 
 no Moose;

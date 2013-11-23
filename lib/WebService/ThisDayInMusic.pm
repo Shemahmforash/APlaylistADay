@@ -39,12 +39,12 @@ sub url {
 
     #add filters to the url
     my @filters = @{ $self->filters };
-    if( scalar @filters ) {
-        for my $filter ( @filters ) {
-           $filter = sprintf('filters[]=%s', $filter);
+    if ( scalar @filters ) {
+        for my $filter (@filters) {
+            $filter = sprintf( 'filters[]=%s', $filter );
         }
 
-        $url = sprintf('%s?%s', $url, join( '&', @filters));
+        $url = sprintf( '%s?%s', $url, join( '&', @filters ) );
     }
 }
 
@@ -69,7 +69,7 @@ sub get {
     my $events = [];
 
     if ( $response->is_success ) {
-        my $response = $response->decoded_content;    # or whatever
+        my $response = $response->decoded_content;
         $events = decode_json $response;
     }
     else {
