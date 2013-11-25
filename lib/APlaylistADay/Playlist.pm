@@ -45,34 +45,31 @@ sub get {
         my $description = $element->{'description'};
 
         my %param = (
-            'type'             => $element->{'type'},
-            'date'             => $element->{'date'},
-            'description'      => $description,
-            'echonest_api_key' => $self->app->{config}->{'echonest'}->{'key'},
-            'echonest_extract' =>
-                $self->app->{config}->{'echonest'}->{'extract'},
-            'google_api_key' => $self->app->{config}->{'google'}->{'key'},
-            'youtube_search_url' =>
-                $self->app->{config}->{'google'}->{'youtube'}->{'search'},
-            'freebase_google_search_url' =>
-                $self->app->{config}->{'google'}->{'freebase'}->{'search'},
+            'type'        => $element->{'type'},
+            'date'        => $element->{'date'},
+            'description' => $description,
         );
 
-        $param{'artist'} = $element->{'name'}
+        $param{'artist_name'} = $element->{'name'}
             if $element->{'name'};
 
         my $event = APlaylistADay::Event->new(%param);
-
-        $self->add_event($event);
+        my $artist = $event->find_event_artist() || next;
 
         my $attr = {
             'date'        => $event->date,
-            'name'        => $event->artist,
+            'name'        => $event->artist->name,
             'description' => $event->description,
             'type'        => $event->type,
         };
-        $attr->{'video'} = $event->track->id
-            if $event->track;
+
+        my $video = $artist->find_track(
+            $self->app->{config}->{'google'}->{'key'} );
+
+        $attr->{'video'} = $video
+            if $video;
+
+        $self->add_event($event);
 
         push @results, $attr;
     }
@@ -85,7 +82,6 @@ sub get {
         },
         any => { text => '', status => 204 }
     );
-
 }
 
 private_method find_events => sub {
@@ -96,8 +92,8 @@ private_method find_events => sub {
     my $month = $arg{'month'};
 
     my $dayinmusic = WebService::ThisDayInMusic->new();
-    $dayinmusic->add_filters('Birth', 'Death');
-    my $events = $dayinmusic->get('day' => $day, 'month' => $month);
+    $dayinmusic->add_filters( 'Birth', 'Death' );
+    my $events = $dayinmusic->get( 'day' => $day, 'month' => $month );
 
     return $events;
 };
