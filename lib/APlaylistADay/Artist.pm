@@ -27,6 +27,7 @@ has 'freebase_topic' => (
     isa    => 'Str',
 );
 
+#using google freebase and google youtube apis, finds a video for the current artist
 sub find_track {
     my ( $self, $google_key ) = @_;
 
@@ -42,6 +43,7 @@ sub find_track {
     return $track->id;
 }
 
+#finds freebase topic for the artist name
 private_method find_artist_topic => sub {
     my $self = shift;
 
@@ -62,6 +64,7 @@ private_method find_artist_topic => sub {
     return $topic->{'mid'};
 };
 
+#finds youtube video for the artist
 private_method find_track_video => sub {
     my ( $self, $google_key ) = @_;
 

@@ -34,6 +34,7 @@ has 'artist' => (
     isa => 'APlaylistADay::Artist',
 );
 
+#using echonest api, finds the most likely artist referenced in the event text
 sub find_event_artist {
     my ( $self, $echonest_key ) = @_;
 

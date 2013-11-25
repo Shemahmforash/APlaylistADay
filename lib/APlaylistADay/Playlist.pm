@@ -42,19 +42,19 @@ sub get {
 
     my @results;
     for my $element (@list) {
-        my $description = $element->{'description'};
-
         my %param = (
             'type'        => $element->{'type'},
             'date'        => $element->{'date'},
-            'description' => $description,
+            'description' => $element->{'description'},
         );
-
         $param{'artist_name'} = $element->{'name'}
             if $element->{'name'};
 
         my $event = APlaylistADay::Event->new(%param);
-        my $artist = $event->find_event_artist() || next;
+        my $artist
+            = $event->find_event_artist(
+            $self->app->{config}->{'echonest'}->{'key'} )
+            || next;
 
         my $attr = {
             'date'        => $event->date,

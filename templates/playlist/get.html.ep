@@ -4,15 +4,17 @@
 <ul>
 % for my $result (@$results) {
     <li>
-        <%= $result->{'date'} %>
+        <span>
+        <%= $result->{'date'} =%>
         -
 %       if( $result->{'name'} ) {
-            <%= $result->{'name'} %>,
+            <%= $result->{'name'} =%>
 %       }
+        </span>
 
-        <%= $result->{'description'} %>
-
-        <%= $result->{'type'} eq 'Birth' ? ', was born.' : '.' =%>
+        <p class="<%= $result->{'type'} =%>">
+            <%= $result->{'description'} =%>
+        </p>
 
 %       if( $result->{'video'}) {
         <iframe id="ytplayer" type="text/html" width="640" height="390"
