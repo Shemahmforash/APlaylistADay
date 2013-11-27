@@ -38,6 +38,8 @@ has 'artist' => (
 sub find_event_artist {
     my ( $self, $echonest_key ) = @_;
 
+    return unless $echonest_key;
+
     my $name = $self->artist_name;
 
     unless ($name) {

@@ -36,6 +36,7 @@ sub get {
     my $events = $self->find_events( 'day' => $day, 'month' => $month );
 
     #splice list according to pagination values
+    #TODO: how to avoid tracks without video
     my @list = splice @{ $events || [] },
         $page * $self->app->{config}->{'playlist'}->{'pagesize'},
         $self->app->{config}->{'playlist'}->{'pagesize'};
@@ -51,18 +52,22 @@ sub get {
             if $element->{'name'};
 
         my $event = APlaylistADay::Event->new(%param);
+
+        #find artist represented in the event
         my $artist
             = $event->find_event_artist(
             $self->app->{config}->{'echonest'}->{'key'} )
             || next;
 
+        #creates a structure to be used in rendering
         my $attr = {
             'date'        => $event->date,
-            'name'        => $event->artist->name,
+            'name'        => $artist->name,
             'description' => $event->description,
             'type'        => $event->type,
         };
 
+        #finds a track/video for the artist found
         my $video = $artist->find_track(
             $self->app->{config}->{'google'}->{'key'} );
 
@@ -92,6 +97,8 @@ private_method find_events => sub {
     my $month = $arg{'month'};
 
     my $dayinmusic = WebService::ThisDayInMusic->new();
+
+    #limit to events of these types
     $dayinmusic->add_filters( 'Birth', 'Death' );
     my $events = $dayinmusic->get( 'day' => $day, 'month' => $month );
 
