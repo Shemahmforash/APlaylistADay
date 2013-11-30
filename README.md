@@ -23,7 +23,8 @@ A web app and service that each day generates a new playlist with songs based on
  1. Install cpanminus. On a Debian-based Linux distribution you can do:
      `sudo apt-get install cpanminus`
  2. Install every perl module in the requirements section using cpanminus
-```bash
+
+``` bash
     sudo cpanm Mojolicious YAML::XS Mojolicious::Plugin::YamlConfig Moose MooseX::Privacy WebService::EchoNest JSON LWP::UserAgent
 ```
  3. Clone this project:
