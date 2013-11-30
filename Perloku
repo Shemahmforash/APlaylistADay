@@ -1,0 +1,2 @@
+#!/bin/sh
+./script/aplaylist_aday daemon --listen http://*:$PORT
