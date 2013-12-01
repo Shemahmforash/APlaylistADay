@@ -16,7 +16,7 @@ WriteMakefile(
         'WebService::EchoNest'            => '0.007',
         'JSON'                            => '2.53',
         'LWP::UserAgent'                  => '6.04',
-
+        'DateTime'                        => '0.75',
     },
     test => { TESTS => 't/*.t' }
 );

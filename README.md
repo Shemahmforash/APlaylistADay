@@ -18,6 +18,7 @@ A web app and service that each day generates a new playlist with songs based on
 * [WebService::EchoNest](http://search.cpan.org/~nickl/WebService-EchoNest-0.007/lib/WebService/EchoNest.pm)
 * [JSON](http://search.cpan.org/~makamaka/JSON-2.90/lib/JSON.pm)
 * [LWP::UserAgent](http://search.cpan.org/~gaas/libwww-perl-6.05/lib/LWP/UserAgent.pm)
+* [DateTime](http://search.cpan.org/~drolsky/DateTime-1.03/lib/DateTime.pm)
 
 #Installation
  1. Install cpanminus. On a Debian-based Linux distribution you can do:
