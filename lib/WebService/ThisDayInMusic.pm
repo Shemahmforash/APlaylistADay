@@ -73,7 +73,7 @@ sub get {
 
     my $response = $ua->get($url);
 
-    print STDERR Dumper $response(), "\n";
+    print STDERR Dumper $response, "\n";
 
     my $events = [];
 
