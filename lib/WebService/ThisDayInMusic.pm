@@ -62,6 +62,7 @@ sub get {
     if ( defined $day && defined $month ) {
         $url = sprintf( '%s&day=%s&month=%s', $url, $day, $month );
     }
+    print STDERR $url, "\n";
 
     #get the results from server
     my $ua = LWP::UserAgent->new;
@@ -77,7 +78,9 @@ sub get {
         $events = decode_json $response;
     }
     else {
-        Carp::carp $response->status_line;
+        print STDERR $response->status_line;
+ 
+#        Carp::carp $response->status_line;
     }
 
     return $events;

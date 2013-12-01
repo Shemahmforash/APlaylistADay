@@ -96,6 +96,8 @@ private_method find_events => sub {
     my $day   = $arg{'day'};
     my $month = $arg{'month'};
 
+    print STDERR $day, $month, "\n";
+
     my $dayinmusic = WebService::ThisDayInMusic->new();
 
     #limit to events of these types
