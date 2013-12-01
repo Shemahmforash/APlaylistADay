@@ -42,11 +42,16 @@ sub get {
         $result = decode_json $response;
     }
     else {
-        carp $response->status_line;
+        print STDERR Dumper $response->status_line;
+#        carp $response->status_line;
     }
+
+
+    print STDERR "freebase topics:";
+    print STDERR Dumper $result;
    
     return
-        unless $result->{'hits'};
+        unless $result && $result->{'hits'};
 
     my @results = @{ $result->{'result'} || [] };
 
