@@ -69,7 +69,11 @@ sub get {
     $ua->timeout(10);
     $ua->env_proxy;
 
+    print STDERR $ua->timeout(), "\n";
+
     my $response = $ua->get($url);
+
+    print STDERR Dumper $response(), "\n";
 
     my $events = [];
 
