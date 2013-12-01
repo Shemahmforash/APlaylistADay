@@ -3,6 +3,7 @@ package WebService::ThisDayInMusic;
 use Moose;
 use MooseX::Privacy;
 use LWP::UserAgent;
+use DateTime;
 use JSON qw(decode_json);
 use Carp;
 
@@ -76,7 +77,7 @@ sub get {
         $events = decode_json $response;
     }
     else {
-        carp $response->status_line;
+        Carp::carp $response->status_line;
     }
 
     return $events;
