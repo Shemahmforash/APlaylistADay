@@ -48,8 +48,11 @@ sub get {
         $result = decode_json $response;
     }
     else {
-        carp $response->status_line;
+        print STDERR Dumper $response->status_line;
     }
+
+    print STDERR "youtube videos:";
+    print STDERR Dumper $result;
 
     return $result;
 }
