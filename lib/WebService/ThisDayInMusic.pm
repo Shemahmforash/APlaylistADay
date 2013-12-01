@@ -73,13 +73,18 @@ sub get {
 
     my $response = $ua->get($url);
 
-    print STDERR Dumper $response, "\n";
+    print STDERR "Response: ";
+    print STDERR Dumper $response;
 
     my $events = [];
 
     if ( $response->is_success ) {
         my $response = $response->decoded_content;
         $events = decode_json $response;
+
+        print STDERR "Events: ";
+        print STDERR Dumper $events;
+
     }
     else {
         print STDERR $response->status_line;
