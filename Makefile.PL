@@ -18,6 +18,7 @@ WriteMakefile(
         'LWP::UserAgent'                  => '6.04',
         'DateTime'                        => '0.75',
         'HTTP::Headers'                   => '6.0',
+        'HTTP::Message'                   => '6.03',
         'Carp'                            => '1.32',
     },
     test => { TESTS => 't/*.t' }
