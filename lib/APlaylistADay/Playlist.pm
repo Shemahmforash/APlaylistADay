@@ -20,7 +20,7 @@ has 'events' => (
 );
 
 has 'date' => (
-    is      => 'ro',
+    is      => 'rw',
     isa     => 'DateTime',
     default => sub { return DateTime->now() },
 );
@@ -33,7 +33,13 @@ sub get {
         $self->stash('day'), $self->stash('month'), $self->stash('page') || 0
     );
 
-    my $events = $self->find_events( 'day' => $day, 'month' => $month );
+    my $date = DateTime->now();
+    if( $month && $day ) {
+        $date = DateTime->new( 'year' => $date->year(), 'month' => $month, 'day' => $day );
+    }
+    $self->date($date);
+
+    my $events = $self->find_events();
 
     #splice list according to pagination values
     #TODO: how to avoid tracks without video
@@ -83,7 +89,7 @@ sub get {
     $self->respond_to(
         json => { json => \@results },
         html => sub {
-            $self->render( 'results' => \@results );
+            $self->render( 'results' => \@results, 'page' => $page, 'date' => $self->date->strftime('%B, %e' ) );
         },
         any => { text => '', status => 204 }
     );
@@ -91,10 +97,8 @@ sub get {
 
 private_method find_events => sub {
     my $self = shift;
-    my %arg  = @_;
 
-    my $day   = $arg{'day'};
-    my $month = $arg{'month'};
+    my ( $day, $month ) = ( $self->date->day, $self->date->month_name );
 
     print STDERR $day, $month, "\n";
 

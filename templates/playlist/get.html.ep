@@ -1,7 +1,9 @@
 % layout 'default';
-% title 'Events';
+% title 'Playlist a Day';
+%# description 'Playlist based on events that happened on this day in music...';
 
 %#TODO: also receive current page and date
+%#TODO: add date to description
 
 <div class="container">
 	<div class="row clearfix">
@@ -31,7 +33,7 @@
             </div>
 			<div class="page-header">
 				<h1>
-					2013/01/01 <small>Playlist based on events that happened on this day in music...</small>
+					<%= $date %> <small>Playlist based on events that happened on this day in music...</small>
 				</h1>
 			</div>
 
@@ -57,28 +59,30 @@
 			</div>
 % }
 
-%#TODO: receive current page in order to create the pagination dynmically
+%#TODO: from current page and max number of pages, create the pagination dynmically
 			<ul class="pagination">
 				<li>
-					<a href="#">Prev</a>
+					<a href="/<%= $page ? $page - 1 : '#'%>">Prev</a>
 				</li>
 				<li>
-					<a href="/1">1</a>
+					<a <%= $page == 1 ? ' class="active" ' : '' %> href="/1">1</a>
 				</li>
 				<li>
-					<a href="/2">2</a>
+					<a <%= $page == 2 ? ' class="active" ' : '' %> href="/2">2</a>
 				</li>
 				<li>
-					<a href="/3">3</a>
+					<a <%= $page == 3 ? ' class="active" ' : '' %> href="/3">3</a>
+				</li>
 				</li>
 				<li>
-					<a href="/4">4</a>
+					<a <%= $page == 4 ? ' class="active" ' : '' %> href="/4">4</a>
 				</li>
 				<li>
-					<a href="/5">5</a>
+					<a <%= $page == 5 ? ' class="active" ' : '' %> href="/5">5</a>
 				</li>
 				<li>
-					<a href="#">Next</a>
+					<a href="/<%= $page + 1 =%>">Next</a>
+				</li>
 				</li>
 			</ul>
 		</div>
