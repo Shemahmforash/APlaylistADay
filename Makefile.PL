@@ -17,6 +17,7 @@ WriteMakefile(
         'JSON'                            => '2.53',
         'LWP::UserAgent'                  => '6.04',
         'DateTime'                        => '0.75',
+        'HTTP::Header'                    => '6.0'
     },
     test => { TESTS => 't/*.t' }
 );
