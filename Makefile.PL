@@ -8,6 +8,7 @@ WriteMakefile(
     NAME      => 'aplaylist_aday',
     EXE_FILES => ['script/aplaylist_aday'],
     PREREQ_PM => {
+        'HTTP::Message'                   => '6.03',
         'Mojolicious'                     => '4.58',
         'YAML::XS'                        => '0.38',
         'Mojolicious::Plugin::YamlConfig' => '0.1.5',
@@ -17,9 +18,6 @@ WriteMakefile(
         'JSON'                            => '2.53',
         'LWP::UserAgent'                  => '6.04',
         'DateTime'                        => '0.75',
-        'HTTP::Headers'                   => '6.0',
-        'HTTP::Message'                   => '6.03',
-        'Carp'                            => '1.32',
     },
     test => { TESTS => 't/*.t' }
 );
