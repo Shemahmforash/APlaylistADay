@@ -1,6 +1,8 @@
 % layout 'default';
 % title 'Events';
 
+%#TODO: also receive current page and date
+
 <div class="container">
 	<div class="row clearfix">
 		<div class="col-md-12 column">
@@ -36,7 +38,7 @@
 %#TODO: change color in birth and death, according to $result->{'type'}
 % for my $result (@$results) {
 			<div class="media well">
-                <span style="float: right" class="glyphicon glyphicon-arrow-<%= $result->{'type'} eq 'Birth' ? 'up' : 'down' =%>" title="<%= $result->{'type'} =%>"></span>
+                <span style="float: right" class="glyphicon glyphicon-circle-arrow-<%= $result->{'type'} eq 'Birth' ? 'up' : 'down' =%>" title="<%= $result->{'type'} =%>"></span>
 %       if( $result->{'video'}) {
         <iframe id="ytplayer" type="text/html" width="400" height="270"
         src="http://www.youtube.com/embed/<%= $result->{'video'} %>"
@@ -54,6 +56,8 @@
 				</div>
 			</div>
 % }
+
+%#TODO: receive current page in order to create the pagination dynmically
 			<ul class="pagination">
 				<li>
 					<a href="#">Prev</a>
