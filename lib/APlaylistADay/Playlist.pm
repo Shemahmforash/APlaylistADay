@@ -34,8 +34,12 @@ sub get {
     );
 
     my $date = DateTime->now();
-    if( $month && $day ) {
-        $date = DateTime->new( 'year' => $date->year(), 'month' => $month, 'day' => $day );
+    if ( $month && $day ) {
+        $date = DateTime->new(
+            'year'  => $date->year(),
+            'month' => $month,
+            'day'   => $day
+        );
     }
     $self->date($date);
 
@@ -89,9 +93,13 @@ sub get {
     $self->respond_to(
         json => { json => \@results },
         html => sub {
-            $self->render( 'results' => \@results, 'page' => $page, 'date' => $self->date->strftime('%B, %e' ) );
+            $self->render(
+                'results' => \@results,
+                'page'    => $page,
+                'date'    => $self->date->strftime('%B, %e')
+            );
         },
-        any => { text => '', status => 204 }
+        any => { text  => '', status => 204 }
     );
 }
 
