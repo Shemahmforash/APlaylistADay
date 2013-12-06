@@ -49,7 +49,7 @@ private_method find_artist_topic => sub {
 
     my $freebase = WebService::Google::Freebase->new();
     my $results  = $freebase->get(
-        'query'   => URI::Escape::uri_escape( $self->name ),
+        'query'   => URI::Escape::uri_escape_utf8( $self->name ),
         'lang'    => 'en',
         'indent'  => 'true',
         'filters' => '(any type:/music/artist)',

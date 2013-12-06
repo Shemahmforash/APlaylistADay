@@ -43,7 +43,7 @@ sub find_event_artist {
     my $name = $self->artist_name;
 
     unless ($name) {
-        my $text = URI::Escape::uri_escape( $self->description() );
+        my $text = URI::Escape::uri_escape_utf8( $self->description() );
 
         my $echonest = WebService::EchoNest->new( api_key => $echonest_key );
 
