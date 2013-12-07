@@ -6,6 +6,7 @@ use Moose;
 use MooseX::Privacy;
 use WebService::ThisDayInMusic;
 use WebService::Google::Freebase;
+use Redis;
 
 use APlaylistADay::Event;
 
@@ -42,6 +43,52 @@ sub get {
         );
     }
     $self->date($date);
+
+    my $redis = Redis->new(server => '127.0.0.1:6379');
+
+    #finds playlist for this day on cache
+    my $results = $redis->get( sprintf('%s-%s', $page, $date->ymd ) );
+    $results = JSON::decode_json $results
+        if $results;
+
+    #if none on cache, find it and set it on cache
+    if( !$results ) {
+        $results = $self->find_playlist( $page );
+        $redis->set(sprintf('%s-%s', $page, $date->ymd ), JSON::encode_json( $results ) );
+    }
+
+    #respond to several content-types
+    $self->respond_to(
+        json => { json => $results },
+        html => sub {
+            $self->render(
+                'results' => $results,
+                'page'    => $page,
+                'date'    => $self->date->strftime('%B, %e')
+            );
+        },
+        any => { text  => '', status => 204 }
+    );
+}
+
+private_method find_events => sub {
+    my $self = shift;
+
+    my ( $day, $month ) = ( $self->date->day, $self->date->month_name );
+
+    print STDERR $day, $month, "\n";
+
+    my $dayinmusic = WebService::ThisDayInMusic->new();
+
+    #limit to events of these types
+    $dayinmusic->add_filters( 'Birth', 'Death' );
+    my $events = $dayinmusic->get( 'day' => $day, 'month' => $month );
+
+    return $events;
+};
+
+private_method find_playlist => sub {
+    my ( $self, $page ) = @_;
 
     my $events = $self->find_events();
 
@@ -89,34 +136,7 @@ sub get {
         push @results, $attr;
     }
 
-    #respond to several content-types
-    $self->respond_to(
-        json => { json => \@results },
-        html => sub {
-            $self->render(
-                'results' => \@results,
-                'page'    => $page,
-                'date'    => $self->date->strftime('%B, %e')
-            );
-        },
-        any => { text  => '', status => 204 }
-    );
-}
-
-private_method find_events => sub {
-    my $self = shift;
-
-    my ( $day, $month ) = ( $self->date->day, $self->date->month_name );
-
-    print STDERR $day, $month, "\n";
-
-    my $dayinmusic = WebService::ThisDayInMusic->new();
-
-    #limit to events of these types
-    $dayinmusic->add_filters( 'Birth', 'Death' );
-    my $events = $dayinmusic->get( 'day' => $day, 'month' => $month );
-
-    return $events;
+    return \@results;
 };
 
 1;
