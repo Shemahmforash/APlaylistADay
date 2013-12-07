@@ -6,6 +6,7 @@ use Moose;
 use MooseX::Privacy;
 use WebService::ThisDayInMusic;
 use WebService::Google::Freebase;
+use Redis;
 
 use APlaylistADay::Event;
 
@@ -43,7 +44,18 @@ sub get {
     }
     $self->date($date);
 
-    my $events = $self->find_events();
+    my $redis = Redis->new(server => '127.0.0.1:6379');
+
+    #finds events on cache for this day
+    my $events = $redis->get( $date->ymd );
+    $events = JSON::decode_json $events
+        if $events;
+
+    #if none on cache, find them and set them on cache
+    if( !$events ) {
+        $events = $self->find_events();
+        $redis->set($date->ymd, JSON::encode_json( $events ) );
+    }
 
     #splice list according to pagination values
     #TODO: how to avoid tracks without video
