@@ -1,0 +1,8 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+/* Set the fixed height of the footer here */
+#footer {
+  height: 60px;
+  background-color: #222;
+  padding-top: 17px;
+}
