@@ -45,8 +45,7 @@ sub get {
     $self->date($date);
 
     #instantiate redis
-    my %redis_arg = ( 'server' => $ENV{'REDISTOGO_URL'}
-            || $self->app->{config}->{'redis'}->{'url'} );
+    my %redis_arg = ( 'server' => $self->app->{config}->{'redis'}->{'url'} );
     $redis_arg{'password'} = $self->app->{config}->{'redis'}->{'url'}
         if $self->app->{config}->{'redis'}->{'url'};
     my $redis = Redis->new(%redis_arg);
