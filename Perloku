@@ -1,2 +1,2 @@
 #!/bin/sh
-./script/aplaylist_aday daemon --listen http://*:$PORT
+./script/aplaylist_aday -m production daemon --listen http://*:$PORT
