@@ -44,17 +44,19 @@ sub get {
     }
     $self->date($date);
 
-    my $redis = Redis->new(server => '127.0.0.1:6379');
+    my $redis
+        = Redis->new( server => $self->app->{config}->{'redis'}->{'url'} );
 
     #finds playlist for this day on cache
-    my $results = $redis->get( sprintf('%s-%s', $page, $date->ymd ) );
+    my $results = $redis->get( sprintf( '%s-%s', $page, $date->ymd ) );
     $results = JSON::decode_json $results
         if $results;
 
     #if none on cache, find it and set it on cache
-    if( !$results ) {
-        $results = $self->find_playlist( $page );
-        $redis->set(sprintf('%s-%s', $page, $date->ymd ), JSON::encode_json( $results ) );
+    if ( !$results ) {
+        $results = $self->find_playlist($page);
+        $redis->set( sprintf( '%s-%s', $page, $date->ymd ),
+            JSON::encode_json($results) );
     }
 
     #respond to several content-types
@@ -67,7 +69,7 @@ sub get {
                 'date'    => $self->date->strftime('%B, %e')
             );
         },
-        any => { text  => '', status => 204 }
+        any => { text => '', status => 204 }
     );
 }
 
