@@ -78,7 +78,7 @@ private_method get_redis => sub {
     my %redis_arg;
     if( $ENV{'REDISTOGO_URL'} ) {
         #redistogo:375083b91d787fdfeaf5e587de0715ae@tarpon.redistogo.com:9386
-        my ( $password, $server ) = $ENV{'REDISTOGO_URL'} =~ m/^redis\:\/\/redistogo:(.*)@(.*)$/; 
+        my ( $password, $server ) = $ENV{'REDISTOGO_URL'} =~ m/^redis\:\/\/redistogo:(.*)@(.*)\/$/; 
 
         %redis_arg = (
             'server'   => $server,
