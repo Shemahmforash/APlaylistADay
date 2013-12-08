@@ -44,7 +44,7 @@ sub get {
     }
     $self->date($date);
 
-    my $redis_url = $ENV{'REDISTOGO_URL'} || $self->app->{config}->{'redis'}->{'url'};
+    my $redis_url = $self->app->{config}->{'redis'}->{'url'};
 
     print STDERR 'redis_url: ', $redis_url , "\n";
 

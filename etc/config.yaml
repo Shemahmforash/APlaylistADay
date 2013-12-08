@@ -13,4 +13,4 @@ development:
 
 production:
     redis:
-        url: 'redis://redistogo:375083b91d787fdfeaf5e587de0715ae@tarpon.redistogo.com:9386/'
+        url: 'redistogo:375083b91d787fdfeaf5e587de0715ae@tarpon.redistogo.com:9386'
