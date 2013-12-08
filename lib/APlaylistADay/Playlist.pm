@@ -47,7 +47,10 @@ sub get {
     my $redis = $self->get_redis();
 
     #finds playlist for this day on cache
-    my $results = $redis ? $redis->get( sprintf( '%s-%s', $page, $date->ymd ) ) : undef;
+    my $results
+        = $redis
+        ? $redis->get( sprintf( '%s-%s', $page, $date->ymd ) )
+        : undef;
     $results = JSON::decode_json $results
         if $results;
 
@@ -72,13 +75,14 @@ sub get {
     );
 }
 
+#instantiates redis from config url or from environment variable
 private_method get_redis => sub {
     my $self = shift;
 
     my %redis_arg;
-    if( $ENV{'REDISTOGO_URL'} ) {
-        #redistogo:375083b91d787fdfeaf5e587de0715ae@tarpon.redistogo.com:9386
-        my ( $password, $server ) = $ENV{'REDISTOGO_URL'} =~ m/^redis\:\/\/redistogo:(.*)@(.*)\/$/; 
+    if ( $ENV{'REDISTOGO_URL'} ) {
+        my ( $password, $server )
+            = $ENV{'REDISTOGO_URL'} =~ m/^redis\:\/\/redistogo:(.*)@(.*)\/$/;
 
         %redis_arg = (
             'server'   => $server,
@@ -86,12 +90,12 @@ private_method get_redis => sub {
         );
     }
     else {
-        $redis_arg{'server'} = $self->app->{config}->{'redis'}->{'url'};    
+        $redis_arg{'server'} = $self->app->{config}->{'redis'}->{'url'};
     }
 
-    print STDERR 'server: ', $redis_arg{'server'}, "\n", 'password: ', $redis_arg{'password'};
+    print STDERR 'server: ', $redis_arg{'server'}, "\n", 'password: ',
+        $redis_arg{'password'};
 
-    #instantiate redis
     my $redis = Redis->new(%redis_arg);
 
     return $redis;
