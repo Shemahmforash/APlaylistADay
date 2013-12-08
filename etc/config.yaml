@@ -14,4 +14,3 @@ development:
 production:
     redis:
         url: 'tarpon.redistogo.com:9386'
-        password: '375083b91d787fdfeaf5e587de0715ae'
