@@ -44,8 +44,12 @@ sub get {
     }
     $self->date($date);
 
+    my $redis_url = $ENV{'REDISTOGO_URL'} || $self->app->{config}->{'redis'}->{'url'};
+
+    print STDERR 'redis_url: ', $redis_url , "\n";
+
     my $redis
-        = Redis->new( server => $self->app->{config}->{'redis'}->{'url'} );
+        = Redis->new( server => $redis_url );
 
     #finds playlist for this day on cache
     my $results = $redis->get( sprintf( '%s-%s', $page, $date->ymd ) );
