@@ -13,4 +13,4 @@ development:
 
 production:
     redis:
-        url: 'redis://localhost:6379'
+        url: 'redis://localhost:6959'
