@@ -1,8 +1,16 @@
-echonest:
-    key: "2FOIUUMCRLFMAWJXT"
+development:
+    echonest:
+        key: "2FOIUUMCRLFMAWJXT"
 
-google:
-    key: "AIzaSyD50sJyFXZHBBvBUbmEwaS4elZOCVE7wMU" 
+    google:
+        key: "AIzaSyD50sJyFXZHBBvBUbmEwaS4elZOCVE7wMU" 
 
-playlist:
-    pagesize: 5
+    playlist:
+        pagesize: 5
+
+    redis:
+       url: '127.0.0.1:6379' 
+
+production:
+    redis:
+        url: 'redis://localhost:6379'
