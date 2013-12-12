@@ -11,6 +11,8 @@ development:
     redis:
        url: '127.0.0.1:6379' 
 
+    use_cache: 1
+
 production:
     redis:
         url: 'tarpon.redistogo.com:9386'

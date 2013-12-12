@@ -44,7 +44,9 @@ sub get {
     }
     $self->date($date);
 
-    my $redis = $self->get_redis();
+    my $use_cache = $self->app->{config}->{'use_cache'};
+
+    my $redis = $use_cache ? $self->get_redis() : undef;
 
     #finds playlist for this day on cache
     my $results
@@ -55,10 +57,12 @@ sub get {
         if $results;
 
     #if none on cache, find it and set it on cache
-    if ( !$results ) {
+    if ( !$results || !scalar @{ $results || [] } ) {
         $results = $self->find_playlist($page);
+
         $redis->set( sprintf( '%s-%s', $page, $date->ymd ),
-            JSON::encode_json($results) );
+            JSON::encode_json($results) )
+            if $use_cache;
     }
 
     #respond to several content-types

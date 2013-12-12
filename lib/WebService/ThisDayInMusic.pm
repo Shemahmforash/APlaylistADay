@@ -36,18 +36,28 @@ has 'filters' => (
 #gets the full url
 sub url {
     my $self = shift;
+    my ( $day, $month ) = @_;
 
     my $url = $self->base_url;
 
-    #add filters to the url
+    my $query;
+
+    #add filters to the query string
     my @filters = @{ $self->filters };
     if ( scalar @filters ) {
         for my $filter (@filters) {
             $filter = sprintf( 'filters[]=%s', $filter );
         }
-
-        $url = sprintf( '%s?%s', $url, join( '&', @filters ) );
+        $query = join( '&', @filters );
     }
+
+    #add date to the query string
+    if ( defined $day && defined $month ) {
+        $query = sprintf( '%s&day=%s&month=%s', $query, $day, $month );
+    }
+
+    $url = sprintf( '%s?%s', $url, $query )
+        if $query;
 
     return $url;
 }
@@ -58,10 +68,7 @@ sub get {
     my $day   = $arg{'day'};
     my $month = $arg{'month'};
 
-    my $url = $self->url;
-    if ( defined $day && defined $month ) {
-        $url = sprintf( '%s&day=%s&month=%s', $url, $day, $month );
-    }
+    my $url = $self->url( $day, $month );
     print STDERR $url, "\n";
 
     #get the results from server
