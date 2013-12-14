@@ -10,8 +10,6 @@ WriteMakefile(
     PREREQ_PM => {
         'HTTP::Message'                   => '6.03',
         'Mojolicious'                     => '4.58',
-        'YAML::XS'                        => '0.38',
-        'Mojolicious::Plugin::YamlConfig' => '0.1.5',
         'Moose'                           => '2.0603',
         'MooseX::Privacy'                 => '0.05',
         'WebService::EchoNest'            => '0.007',

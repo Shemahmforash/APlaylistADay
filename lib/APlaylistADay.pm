@@ -7,14 +7,7 @@ use Data::Dumper;
 sub startup {
     my $self = shift;
 
-    #keep application config
-    my $cfg = $self->plugin(
-        yaml_config => {
-            file      => 'etc/config.yaml',
-            stash_key => 'conf',
-            class     => 'YAML::XS'
-        }
-    );
+    my $cfg = $self->plugin('JSONConfig', file => 'etc/config.json');
 
     #merging default environment config with current environment config
     my %config = %{ $cfg->{'development'} || {} };
