@@ -55,9 +55,6 @@ sub find_event_artist {
             'format'  => 'json',
         );
 
-        print STDERR "echonest artist/extract\n";
-        print STDERR Dumper $data;
-
         if ( $data->{'response'}->{'status'}->{'code'} == 0 ) {
             my $artist = shift $data->{'response'}->{'artists'};
 
@@ -69,7 +66,6 @@ sub find_event_artist {
                     . $data->{'response'}->{'status'}->{'message'} );
         }
 
-        print STDERR "artist name: $name";
         $self->artist_name($name);
     }
 

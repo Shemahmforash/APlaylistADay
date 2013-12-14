@@ -29,7 +29,7 @@ has 'date' => (
 sub get {
     my $self = shift;
 
-    #TODO: check validity of day and month, and set property of current class
+    #TODO: check validity of day and month
     my ( $day, $month, $page ) = (
         $self->stash('day'), $self->stash('month'), $self->stash('page') || 0
     );
@@ -157,6 +157,13 @@ private_method find_playlist => sub {
             'description' => $event->description,
             'type'        => $event->type,
         };
+
+        if( $event->type eq 'Birth' && $event->description !~ /was\sborn/) {
+            $attr->{'description'} .= ', was born on this day.';
+        }
+
+        $attr->{'description'} .= '.'
+            unless $attr->{'description'} =~ /\.$/;
 
         #finds a track/video for the artist found
         my $video = $artist->find_track(
