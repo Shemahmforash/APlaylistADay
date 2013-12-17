@@ -17,7 +17,7 @@
     "production": {
         "redis": {
            "url": "tarpon.redistogo.com:9386"
-        }
+        },
         "use_cache" : 1
     }
 }
