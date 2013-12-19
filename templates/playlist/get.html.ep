@@ -19,21 +19,18 @@
                             </li>
                         </ul>
                     </div>
+
+                    <input type="text" class="span2" id="dp1" >
                     
                 </nav>
-                <div class="well">
-                    <div id="datetimepicker4" class="input-append">
-                        <input data-format="yyyy-MM-dd" type="text"></input>
-                        <span class="add-on">
-                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-                        </span>
-                    </div>
-                </div>
+
                 <div class="page-header">
                     <h1>
                         <%= $date %> <small>Playlist based on events that happened on this day in music...</small>
                     </h1>
                 </div>
+
+
 
     %#TODO: change color in birth and death, according to $result->{'type'}
     % for my $result (@$results) {
@@ -96,9 +93,9 @@
 </div>
 
 <script type="text/javascript">
-  $(function() {
-    $('#datetimepicker4').datetimepicker({
-      pickTime: false
+    $(function(){
+        $('#dp1').datepicker({
+            format: 'yyyy-mm-dd'
+        });
     });
-  });
 </script>
