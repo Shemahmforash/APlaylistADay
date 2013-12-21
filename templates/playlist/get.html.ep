@@ -4,85 +4,89 @@
 
 %#TODO: add date to description
 
-    <div class="container">
-        <div class="row clearfix">
-            <div class="col-md-12 column">
-                <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#">A Playlist A Day</a>
-                    </div>
-                    
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                            <li>
-                                <a href="#">About</a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <input type="text" class="span2" id="dp1" >
-                    
-                </nav>
-
-                <div class="page-header">
-                    <h1>
-                        <%= $date %> <small>Playlist based on events that happened on this day in music...</small>
-                    </h1>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
+                <div class="navbar-header">
+                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="/">A Playlist A Day</a>
                 </div>
 
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="/about">About</a>
+                        </li>
+                    </ul>
 
+                    <p class="navbar-text navbar-date"><%= $date  %></p>
 
-    %#TODO: change color in birth and death, according to $result->{'type'}
-    % for my $result (@$results) {
-                <div class="media well">
-                    <span style="float: right" class="glyphicon glyphicon-circle-arrow-<%= $result->{'type'} eq 'Birth' ? 'up' : 'down' =%>" title="<%= $result->{'type'} =%>"></span>
-    %       if( $result->{'video'}) {
-            <iframe id="ytplayer" type="text/html" width="400" height="270"
-            src="http://www.youtube.com/embed/<%= $result->{'video'} %>"
-                frameborder="0" class="pull-left"/></iframe>
-    %       }
-                    <div class="media-body">
-                        <h4 class="media-heading">
-                            <%= $result->{'date'} =%>
-                            -
-    %       if( $result->{'name'} ) {
-                <%= $result->{'name'} =%>
-    %       }
-                        </h4>
-                <%= $result->{'description'} =%>
-                    </div>
+                    <form class="navbar-form navbar-right" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="dp1" />
+                        </div>
+                        <button type="submit" class="btn btn-default">Submit</button>
+                    </form>
                 </div>
-    % }
+            </nav>
 
-    %#TODO: from current page and max number of pages, create the pagination dynmically
-                <ul class="pagination">
-                    <li>
-                        <a href="/<%= $page ? $page - 1 : '#'%>">Prev</a>
-                    </li>
-                    <li>
-                        <a <%= $page == 1 ? ' class="active" ' : '' %> href="/1">1</a>
-                    </li>
-                    <li>
-                        <a <%= $page == 2 ? ' class="active" ' : '' %> href="/2">2</a>
-                    </li>
-                    <li>
-                        <a <%= $page == 3 ? ' class="active" ' : '' %> href="/3">3</a>
-                    </li>
-                    </li>
-                    <li>
-                        <a <%= $page == 4 ? ' class="active" ' : '' %> href="/4">4</a>
-                    </li>
-                    <li>
-                        <a <%= $page == 5 ? ' class="active" ' : '' %> href="/5">5</a>
-                    </li>
-                    <li>
-                        <a href="/<%= $page + 1 =%>">Next</a>
-                    </li>
-                    </li>
-                </ul>
+            <div class="page-header playlist">
+                <h1>
+                    <%= $date %> <small>Playlist based on events that happened on this day in music...</small>
+                </h1>
             </div>
+
+%#TODO: change color in birth and death, according to $result->{'type'}
+% for my $result (@$results) {
+            <div class="media well">
+                <span style="float: right" class="glyphicon glyphicon-circle-arrow-<%= $result->{'type'} eq 'Birth' ? 'up' : 'down' =%>" title="<%= $result->{'type'} =%>"></span>
+%       if( $result->{'video'}) {
+        <iframe id="ytplayer" type="text/html" width="400" height="270"
+        src="http://www.youtube.com/embed/<%= $result->{'video'} %>"
+            frameborder="0" class="pull-left"/></iframe>
+%       }
+                <div class="media-body">
+                    <h4 class="media-heading">
+                        <%= $result->{'date'} =%>
+                        -
+%       if( $result->{'name'} ) {
+            <%= $result->{'name'} =%>
+%       }
+                    </h4>
+            <%= $result->{'description'} =%>
+                </div>
+            </div>
+% }
+
+%#TODO: from current page and max number of pages, create the pagination dynmically
+            <ul class="pagination">
+                <li>
+                    <a href="/<%= $page ? $page - 1 : '#'%>">Prev</a>
+                </li>
+                <li>
+                    <a <%= $page == 1 ? ' class="active" ' : '' %> href="/1">1</a>
+                </li>
+                <li>
+                    <a <%= $page == 2 ? ' class="active" ' : '' %> href="/2">2</a>
+                </li>
+                <li>
+                    <a <%= $page == 3 ? ' class="active" ' : '' %> href="/3">3</a>
+                </li>
+                </li>
+                <li>
+                    <a <%= $page == 4 ? ' class="active" ' : '' %> href="/4">4</a>
+                </li>
+                <li>
+                    <a <%= $page == 5 ? ' class="active" ' : '' %> href="/5">5</a>
+                </li>
+                <li>
+                    <a href="/<%= $page + 1 =%>">Next</a>
+                </li>
+                </li>
+            </ul>
         </div>
     </div>
+</div>
 
 <div id="footer">
     <div class="container">

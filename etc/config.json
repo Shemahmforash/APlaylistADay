@@ -12,7 +12,7 @@
         "redis": {
            "url": "127.0.0.1:6379"
         },
-        "use_cache" : 0
+        "use_cache" : 1
     },
     "production": {
         "redis": {
