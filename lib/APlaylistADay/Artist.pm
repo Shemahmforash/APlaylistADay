@@ -27,6 +27,11 @@ has 'freebase_topic' => (
     isa    => 'Str',
 );
 
+has 'image' => (
+    is  => 'rw',
+    isa => 'Str',
+);
+
 #using google freebase and google youtube apis, finds a video for the current artist
 sub find_track {
     my ( $self, $google_key ) = @_;
@@ -41,6 +46,50 @@ sub find_track {
     $self->track($track);
 
     return $track->id;
+}
+
+sub find_image {
+    my ( $self, $echonest_key ) = @_;
+
+    return unless $echonest_key;
+
+    my $name = $self->name;
+
+    my $echonest = WebService::EchoNest->new( api_key => $echonest_key );
+    my $data;
+    eval {
+        $data = $echonest->request(
+            'artist/images',
+            'name'    => $name,
+            'results' => 1,
+            'format'  => 'json',
+        );
+        
+    };
+    if( $@ ) {
+        my $log = Mojo::Log->new;
+        $log->error( $name . ' is not a recognizable artist name: '
+                . $data->{'response'}->{'status'}->{'message'} );
+
+        return;
+    }
+
+    my $image;
+    if ( $data->{'response'}->{'status'}->{'code'} == 0 ) {
+        $image = shift $data->{'response'}->{'images'};
+
+        $image = $image->{'url'};
+
+        $self->image($image)
+            if $image;
+    }
+    else {
+        my $log = Mojo::Log->new;
+        $log->error( 'Error connecting to echonest: '
+                . $data->{'response'}->{'status'}->{'message'} );
+    }
+
+    return $image;
 }
 
 #finds freebase topic for the artist name
@@ -98,6 +147,7 @@ private_method find_track_video => sub {
 
     return $track;
 };
+
 
 no Moose;
 __PACKAGE__->meta->make_immutable;

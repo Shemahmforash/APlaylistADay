@@ -169,8 +169,14 @@ private_method find_playlist => sub {
         my $video = $artist->find_track(
             $self->app->{config}->{'google'}->{'key'} );
 
-        $attr->{'video'} = $video
-            if $video;
+        if ($video) {
+            $attr->{'video'} = $video;
+        }
+        else {
+            my $image = $artist->find_image(
+                $self->app->{config}->{'echonest'}->{'key'} );
+            $attr->{'image'} = $image;
+        }
 
         $self->add_event($event);
 

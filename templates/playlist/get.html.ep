@@ -44,6 +44,10 @@
             src="http://www.youtube.com/embed/<%= $result->{'video'} %>"
                 frameborder="0" class="pull-left"/></iframe>
     %       }
+    %       if( $result->{'image'} ) {
+                <img src="<%= $result->{'image'} %>">
+    %       }
+
                     <div class="media-body">
                         <h4 class="media-heading">
                             <%= $result->{'date'} =%>
