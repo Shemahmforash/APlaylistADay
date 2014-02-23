@@ -1,79 +1,59 @@
 package APlaylistADay::Event;
 
+use DateTime;
+use Mojo::Base 'Mojolicious::Controller';
 use Moose;
 use MooseX::Privacy;
-use APlaylistADay::Artist;
-use URI::Escape ();
-use WebService::EchoNest;
+use WebService::ThisDayInMusic;
+use WebService::Google::Freebase;
+use Redis;
+
+use APlaylistADay::Event;
+
 use Data::Dumper;
 
-use namespace::autoclean;
-
 has 'date' => (
-    is  => 'ro',
-    isa => 'Str',
+    is      => 'rw',
+    isa     => 'DateTime',
+    default => sub { return DateTime->now() },
 );
 
-has 'type' => (
-    is  => 'ro',
-    isa => 'Str',
-);
+sub get {
+    my $self = shift;
 
-has 'description' => (
-    is  => 'ro',
-    isa => 'Str',
-);
+    #TODO: check validity of day and month
+    my ( $day, $month, $page ) = (
+        $self->stash('day'), $self->stash('month'), $self->stash('page') || 0
+    );
 
-has 'artist_name' => (
-    is  => 'rw',
-    isa => 'Str',
-);
-
-has 'artist' => (
-    is  => 'rw',
-    isa => 'APlaylistADay::Artist',
-);
-
-#using echonest api, finds the most likely artist referenced in the event text
-sub find_event_artist {
-    my ( $self, $echonest_key ) = @_;
-
-    return unless $echonest_key;
-
-    my $name = $self->artist_name;
-
-    unless ($name) {
-        my $text = URI::Escape::uri_escape_utf8( $self->description() );
-
-        my $echonest = WebService::EchoNest->new( api_key => $echonest_key );
-
-        my $data = $echonest->request(
-            'artist/extract',
-            'text'    => $text,
-            'sort'    => 'hotttnesss-desc',
-            'results' => 1,
-            'format'  => 'json',
+    my $date = DateTime->now();
+    if ( $month && $day ) {
+        $date = DateTime->new(
+            'year'  => $date->year(),
+            'month' => $month,
+            'day'   => $day
         );
-
-        if ( $data->{'response'}->{'status'}->{'code'} == 0 ) {
-            my $artist = shift $data->{'response'}->{'artists'};
-
-            $name = $artist->{'name'};
-        }
-        else {
-            my $log = Mojo::Log->new;
-            $log->error( 'Error connecting to echonest: '
-                    . $data->{'response'}->{'status'}->{'message'} );
-        }
-
-        $self->artist_name($name);
     }
+    $self->date($date);
 
-    my $artist = APlaylistADay::Artist->new( 'name' => $name );
-    $self->artist($artist);
-
-    return $artist;
+    my $events = $self->find_events();
+    die Dumper $events;
+    
 }
 
-no Moose;
-__PACKAGE__->meta->make_immutable;
+private_method find_events => sub {
+    my $self = shift;
+
+    my ( $day, $month ) = ( $self->date->day, $self->date->month_name );
+
+    print STDERR $day, $month, "\n";
+
+    my $dayinmusic = WebService::ThisDayInMusic->new();
+
+    #limit to events of these types
+    my $events = $dayinmusic->get( 'action' => 'event', 'day' => $day, 'month' => $month );
+
+    return $events;
+};
+
+1;

@@ -16,7 +16,7 @@ has 'base_url' => (
     isa      => 'Str',
     traits   => [qw/Private/],
     required => 1,
-    default  => 'http://icdif.com/thisdayinmusic/events/'
+    default  => 'http://thisdayinmusic.icdif.com/api/v0.1/'
 );
 
 has 'date' => (
@@ -36,9 +36,9 @@ has 'filters' => (
 #gets the full url
 sub url {
     my $self = shift;
-    my ( $day, $month ) = @_;
+    my ( $action, $day, $month ) = @_;
 
-    my $url = $self->base_url;
+    my $url = $self->base_url . $action . '/';
 
     my $query;
 
@@ -63,12 +63,16 @@ sub url {
 }
 
 sub get {
-    my $self  = shift;
-    my %arg   = @_;
-    my $day   = $arg{'day'};
-    my $month = $arg{'month'};
+    my $self   = shift;
+    my %arg    = @_;
+    my $action = $arg{'action'};
+    my $day    = $arg{'day'};
+    my $month  = $arg{'month'};
 
-    my $url = $self->url( $day, $month );
+    die "Undefined action"
+        unless $action;
+
+    my $url = $self->url( $action, $day, $month );
     print STDERR $url, "\n";
 
     #get the results from server
@@ -95,8 +99,8 @@ sub get {
     }
     else {
         print STDERR $response->status_line;
- 
-#        Carp::carp $response->status_line;
+
+        #        Carp::carp $response->status_line;
     }
 
     return $events;
