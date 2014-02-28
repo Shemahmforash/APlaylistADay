@@ -1,9 +1,11 @@
 package APlaylistADay::Event;
 
-use DateTime;
 use Mojo::Base 'Mojolicious::Controller';
-use Moose;
 
+use Moose;
+use DateTime;
+use Date::Parse;
+use DateTime::Locale;
 use Data::Dumper;
 
 has 'date' => (
@@ -22,16 +24,20 @@ sub get {
 
     my $date = DateTime->now();
     if ( $month && $day ) {
-        $date = DateTime->new(
-            'year'  => $date->year(),
-            'month' => $month,
-            'day'   => $day
-        );
+        my $epoch= Date::Parse::str2time(  "$day $month 2014" );
+
+        $date = DateTime->from_epoch(
+                        'epoch'     => $epoch,
+                        'locale'    => 'en_GB',
+                        'time_zone' => 'local',
+                    );
     }
+
     $self->date($date);
+
     my $results = $self->events->find(
-        'day'   => $self->date->day,
-        'month' => $self->date->month_name
+        $self->date->day,
+        $self->date->strftime('%m'),
     );
 
     #respond to several content-types

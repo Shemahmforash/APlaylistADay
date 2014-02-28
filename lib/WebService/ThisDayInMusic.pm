@@ -26,13 +26,6 @@ has 'date' => (
     default => sub { return DateTime->now() },
 );
 
-has 'filters' => (
-    traits  => ['Array'],
-    is      => 'ro',
-    default => sub { return [] },
-    handles => { add_filters => 'push', }
-);
-
 #gets the full url
 sub url {
     my $self = shift;
@@ -41,15 +34,6 @@ sub url {
     my $url = $self->base_url . $action . '/';
 
     my $query;
-
-    #add filters to the query string
-    my @filters = @{ $self->filters };
-    if ( scalar @filters ) {
-        for my $filter (@filters) {
-            $filter = sprintf( 'filters[]=%s', $filter );
-        }
-        $query = join( '&', @filters );
-    }
 
     #add date to the query string
     if ( defined $day && defined $month ) {
@@ -99,8 +83,6 @@ sub get {
     }
     else {
         print STDERR $response->status_line;
-
-        #        Carp::carp $response->status_line;
     }
 
     return $events;

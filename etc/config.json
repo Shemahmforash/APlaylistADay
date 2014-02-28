@@ -7,7 +7,7 @@
            "key": "AIzaSyD50sJyFXZHBBvBUbmEwaS4elZOCVE7wMU"
         },
         "playlist": {
-           "pagesize": 5
+           "pagesize": 15
         },
         "redis": {
            "url": "127.0.0.1:6379"

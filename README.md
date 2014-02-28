@@ -19,6 +19,7 @@ A web app and service that each day generates a new playlist with songs based on
 * [LWP::Protocol::https](http://search.cpan.org/~gaas/LWP-Protocol-https-6.04/lib/LWP/Protocol/https.pm)
 * [DateTime](http://search.cpan.org/~drolsky/DateTime-1.03/lib/DateTime.pm)
 * [Redis](http://search.cpan.org/~dams/Redis-1.965/lib/Redis.pm)
+* [Date::Parse](http://search.cpan.org/~gbarr/TimeDate-2.30/lib/Date/Parse.pm)
 
 #Installation
  1. Install cpanminus. On a Debian-based Linux distribution you can do:
@@ -26,7 +27,7 @@ A web app and service that each day generates a new playlist with songs based on
  2. Install every perl module in the requirements section using cpanminus
 
 ``` bash
-    sudo cpanm Mojolicious Moose MooseX::Privacy WebService::EchoNest JSON LWP::UserAgent LWP::Protocol::https DateTime Redis
+    sudo cpanm Mojolicious Moose MooseX::Privacy WebService::EchoNest JSON LWP::UserAgent LWP::Protocol::https DateTime Redis Date::Parse
 ```
  3. Clone this project:
     `git clone https://github.com/Shemahmforash/APlaylistADay.git`
