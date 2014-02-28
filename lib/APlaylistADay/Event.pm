@@ -3,12 +3,6 @@ package APlaylistADay::Event;
 use DateTime;
 use Mojo::Base 'Mojolicious::Controller';
 use Moose;
-use MooseX::Privacy;
-use WebService::ThisDayInMusic;
-use WebService::Google::Freebase;
-use Redis;
-
-use APlaylistADay::Event;
 
 use Data::Dumper;
 
@@ -35,25 +29,23 @@ sub get {
         );
     }
     $self->date($date);
+    my $results = $self->events->find(
+        'day'   => $self->date->day,
+        'month' => $self->date->month_name
+    );
 
-    my $events = $self->find_events();
-    die Dumper $events;
-    
+    #respond to several content-types
+    $self->respond_to(
+        json => { json => $results },
+        html => sub {
+            $self->render(
+                'results' => $results,
+                'page'    => 0, 
+                'date'    => $self->date->strftime('%B, %e')
+            );
+        },
+        any => { text => '', status => 204 }
+    );
 }
-
-private_method find_events => sub {
-    my $self = shift;
-
-    my ( $day, $month ) = ( $self->date->day, $self->date->month_name );
-
-    print STDERR $day, $month, "\n";
-
-    my $dayinmusic = WebService::ThisDayInMusic->new();
-
-    #limit to events of these types
-    my $events = $dayinmusic->get( 'action' => 'event', 'day' => $day, 'month' => $month );
-
-    return $events;
-};
 
 1;

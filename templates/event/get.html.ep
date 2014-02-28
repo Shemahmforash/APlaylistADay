@@ -1,0 +1,105 @@
+% layout 'default';
+% title 'Events';
+
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#">A Playlist A Day</a>
+                    </div>
+                    
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <a href="#">About</a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                </nav>
+                <div class="well">
+                    <div id="datetimepicker4" class="input-append">
+                        <input data-format="yyyy-MM-dd" type="text"></input>
+                        <span class="add-on">
+                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="page-header">
+                    <h1>
+                        <%= $date %> <small>Playlist based on events that happened on this day in music...</small>
+                    </h1>
+                </div>
+
+    %#TODO: change color in birth and death, according to $result->{'type'}
+    % for my $result (@{ $results->{'response'}->{'events'} } ) {
+                <div class="media well">
+                    <span style="float: right" class="glyphicon glyphicon-circle-arrow-<%= $result->{'type'} eq 'Birth' ? 'up' : 'down' =%>" title="<%= $result->{'type'} =%>"></span>
+    %       if( $result->{'video'}) {
+            <iframe id="ytplayer" type="text/html" width="400" height="270"
+            src="http://www.youtube.com/embed/<%= $result->{'video'} %>"
+                frameborder="0" class="pull-left"/></iframe>
+    %       }
+    %       if( $result->{'image'} ) {
+                <img src="<%= $result->{'image'} %>">
+    %       }
+
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            <%= $result->{'date'} =%>
+                            -
+    %       if( $result->{'name'} ) {
+                <%= $result->{'name'} =%>
+    %       }
+                        </h4>
+                <%= $result->{'description'} =%>
+                    </div>
+                </div>
+    % }
+
+    %#TODO: from current page and max number of pages, create the pagination dynmically
+                <ul class="pagination">
+                    <li>
+                        <a href="/<%= $page ? $page - 1 : '#'%>">Prev</a>
+                    </li>
+                    <li>
+                        <a <%= $page == 1 ? ' class="active" ' : '' %> href="/1">1</a>
+                    </li>
+                    <li>
+                        <a <%= $page == 2 ? ' class="active" ' : '' %> href="/2">2</a>
+                    </li>
+                    <li>
+                        <a <%= $page == 3 ? ' class="active" ' : '' %> href="/3">3</a>
+                    </li>
+                    </li>
+                    <li>
+                        <a <%= $page == 4 ? ' class="active" ' : '' %> href="/4">4</a>
+                    </li>
+                    <li>
+                        <a <%= $page == 5 ? ' class="active" ' : '' %> href="/5">5</a>
+                    </li>
+                    <li>
+                        <a href="/<%= $page + 1 =%>">Next</a>
+                    </li>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+<div id="footer">
+    <div class="container">
+        <a href="http://echonest.com" target="_blank">
+            <img src="/img/EN_P_on_Dark_Transparent.png" title="Powered by Echonest" alt="Powered by Echonest" class="center-block"/>
+        </a>
+    </div>
+</div>
+
+<script type="text/javascript">
+  $(function() {
+    $('#datetimepicker4').datetimepicker({
+      pickTime: false
+    });
+  });
+</script>
