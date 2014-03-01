@@ -49,7 +49,7 @@ sub url {
 
     #add date to the query string
     if ( defined $day && defined $month ) {
-        $query = sprintf( '%s&day=%s&month=%s', $query, $day, $month );
+        $query = sprintf( '%s&day=%02d&month=%02d', $query, $day, $month );
     }
 
     $query .= sprintf( '&offset=%d', $self->offset )
