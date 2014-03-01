@@ -37,20 +37,18 @@
                         <%= $date %> <small>Playlist based on the events that happened on this day in music...</small>
                     </h1>
                 </div>
+<%
+    my $playlist;
+    for my $track (@{ $results->{'response'}->{'tracks'} } ) {
+        $playlist .= ','
+            if $playlist;         
 
-    %#TODO: change color in birth and death, according to $result->{'type'}
-    % for my $result (@{ $results->{'response'}->{'tracks'} } ) {
-                <div class="media well">
-                    <div class="media-body">
-                        <h4 class="media-heading">
-    %       if( $result->{'artist'} ) {
-                <%= $result->{'artist'} =%>
-    %       }
-                        </h4>
-                <%= $result->{'name'} =%>
-                    </div>
-                </div>
-    % }
+        $track->{'spotifyId'} =~ s/spotify\-WW\:track\://;
+
+        $playlist .= $track->{'spotifyId'};
+    }
+%>
+                <iframe src="https://embed.spotify.com/?uri=spotify:trackset:Playlist for <%= $date %>:<%= $playlist %>" style="width:640px; height:520px;" frameborder="0" allowtransparency="true"></iframe>
 
             </div>
         </div>
