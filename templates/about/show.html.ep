@@ -1,0 +1,50 @@
+
+% layout 'default';
+% title 'About This Day In Music';
+
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="/">This Day In Music</a>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <a href="/event/">Events</a>
+                            </li>
+                            <li>
+                                <a href="/playlist/">Playlist</a>
+                            </li>
+                            <li class="active">
+                                <a href="/about/">About</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </nav>
+                <div class="well">
+                </div>
+
+                <div class="jumbotron">
+                    <h1>
+                        This Day In Music
+                    </h1>
+                    <p>
+                        I created this project with the purpose of showing the events that happened on this day during the history of music as well as providing spotify playlists based on those same events.
+                    </p>
+                    <p>
+                        There is also a twitter account alongside this site: @...
+                    </p>
+                    <p>
+                        The code of this project is available online at https://github.com/Shemahmforash/APlaylistADay and https://github.com/Shemahmforash/ThisDayInMusic feel free to fork the projects and cohoperate with me.
+                    </p>
+                    <p>
+                        If ou have any doubt or suggestion feel free to reach me at: ...
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>

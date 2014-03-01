@@ -29,6 +29,7 @@ sub startup {
 
     #all routes available
     $r->get('/')->to('event#get');
+    $r->get('/about/')->to('about#show');
     $r->get('/event/')->to('event#get');
     $r->get('/event/:page')->to('event#get');
     $r->get('/event/:month/:day')->to('event#get');
