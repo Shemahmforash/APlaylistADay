@@ -38,6 +38,14 @@ has 'offset' => (
     'default' => 0,
 );
 
+has 'fields' => (
+    traits  => ['Array'],
+    is      => 'ro',
+    default => sub { return [] },
+    handles => { add_field => 'push', }
+);
+
+
 #gets the full url
 sub url {
     my $self = shift;
@@ -58,6 +66,10 @@ sub url {
     $query .= sprintf( '&results=%d', $self->results )
         if $self->results; 
 
+    for my $field ( @{ $self->fields } ) {
+        $query .= "&fields[]=$field";
+    }
+
     $url = sprintf( '%s?%s', $url, $query )
         if $query;
 
@@ -70,12 +82,19 @@ sub get {
     my $action = $arg{'action'};
     my $day    = $arg{'day'};
     my $month  = $arg{'month'};
+    my $fields = $arg{'fields'};
 
     $self->offset( $arg{'offset'} )
         if( defined $arg{'offset'} );
 
     $self->results( $arg{'results'} )
         if( $arg{'results'} );
+
+    if( $fields && ref $fields eq 'ARRAY' ) {
+        for my $field ( @{ $fields || [] } ) {
+            $self->add_field( $field );
+        }
+    }
 
     die "Undefined action"
         unless $action;

@@ -23,6 +23,8 @@ sub find {
     $arg{'results'} = $results
         if defined $results;
 
+    $arg{'fields'} = [ qw(artist date description type ) ];
+
     my $dayinmusic = WebService::ThisDayInMusic->new();
 
     my $events = $dayinmusic->get(
