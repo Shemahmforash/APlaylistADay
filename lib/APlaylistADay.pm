@@ -28,8 +28,8 @@ sub startup {
     #all routes available
     $r->get('/')->to('event#get');
     $r->get('/event/')->to('event#get');
-    $r->get('/event/:day/:month')->to('event#get');
-    $r->get('/event/:day/:month/:page')->to('event#get');
+    $r->get('/event/:month/:day')->to('event#get');
+    $r->get('/event/:month/:day/:page')->to('event#get');
 
 =for
     $r->get('/')->to('playlist#get');
