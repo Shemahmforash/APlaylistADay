@@ -2,6 +2,8 @@ package APlaylistADay::Event;
 
 use Mojo::Base 'Mojolicious::Controller';
 
+use POSIX;
+
 use Moose;
 use DateTime;
 use Date::Parse;
@@ -42,18 +44,41 @@ sub get {
         $self->config->{'playlist'}->{'results'},
     );
 
+    if( !$results || $results->{'status'}->{'code'} != 0 ) {
+        #TODO: error page
+    }
+
+    my $pages = $self->_pages_2_render( $self->config->{'playlist'}->{'results'}, $results->{'response'}->{'pagination'}->{'total'}, $page );
+
+    #don't allow out of range pages
+    $page = $pages->[-1]
+        if( $page > $pages->[-1] );
+
     #respond to several content-types
     $self->respond_to(
         json => { json => $results },
         html => sub {
             $self->render(
                 'results' => $results,
-                'page'    => 0, 
+                'page'    => $page, 
+                'pages'   => $pages, 
                 'date'    => $self->date->strftime('%B, %e')
             );
         },
         any => { text => '', status => 204 }
     );
+}
+
+sub _pages_2_render{
+    my ( $self, $pagesize, $total, $page ) = @_;
+
+    $page ||= 1;
+
+    my $total_pages = 1 + floor( $total / $pagesize );
+
+    my @pages = 1 .. $total_pages;
+
+    return \@pages,
 }
 
 1;

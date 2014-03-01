@@ -27,17 +27,15 @@ sub startup {
 
     #all routes available
     $r->get('/')->to('event#get');
+    $r->get('/:page')->to('event#get');
     $r->get('/event/')->to('event#get');
+    $r->get('/event/:page')->to('event#get');
     $r->get('/event/:month/:day')->to('event#get');
     $r->get('/event/:month/:day/:page')->to('event#get');
-
-=for
-    $r->get('/')->to('playlist#get');
-    $r->get('/:page')->to('playlist#get');
     $r->get('/playlist/')->to('playlist#get');
-    $r->get('/playlist/:day/:month')->to('playlist#get');
-    $r->get('/playlist/:day/:month/:page')->to('playlist#get');
-=cut
+    $r->get('/playlist/:page')->to('playlist#get');
+    $r->get('/playlist/:month/:day')->to('playlist#get');
+    $r->get('/playlist/:month/:day/:page')->to('playlist#get');
 }
 
 1;
