@@ -17,6 +17,7 @@ WriteMakefile(
         'LWP::UserAgent'                  => '6.04',
         'LWP::Protocol::https'            => '6.03',
         'DateTime'                        => '0.75',
+        'Date::Parse'                     => '2.30',
         'Redis'                           => '1.965'
     },
     test => { TESTS => 't/*.t' }
