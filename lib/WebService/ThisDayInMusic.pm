@@ -26,6 +26,18 @@ has 'date' => (
     default => sub { return DateTime->now() },
 );
 
+has 'results' => (
+    'is' => 'rw',
+    'isa' => 'Int',
+    'default' => 0,
+);
+
+has 'offset' => (
+    'is' => 'rw',
+    'isa' => 'Int',
+    'default' => 0,
+);
+
 #gets the full url
 sub url {
     my $self = shift;
@@ -40,6 +52,12 @@ sub url {
         $query = sprintf( '%s&day=%s&month=%s', $query, $day, $month );
     }
 
+    $query .= sprintf( '&offset=%d', $self->offset )
+        if $self->offset; 
+
+    $query .= sprintf( '&results=%d', $self->results )
+        if $self->results; 
+
     $url = sprintf( '%s?%s', $url, $query )
         if $query;
 
@@ -52,6 +70,12 @@ sub get {
     my $action = $arg{'action'};
     my $day    = $arg{'day'};
     my $month  = $arg{'month'};
+
+    $self->offset( $arg{'offset'} )
+        if( defined $arg{'offset'} );
+
+    $self->results( $arg{'results'} )
+        if( $arg{'results'} );
 
     die "Undefined action"
         unless $action;

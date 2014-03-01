@@ -19,7 +19,7 @@ sub get {
 
     #TODO: check validity of day and month
     my ( $day, $month, $page ) = (
-        $self->stash('day'), $self->stash('month'), $self->stash('page') || 0
+        $self->stash('day'), $self->stash('month'), $self->stash('page') > 0 ? $self->stash('page') : 1
     );
 
     my $date = DateTime->now();
@@ -32,12 +32,14 @@ sub get {
                         'time_zone' => 'local',
                     );
     }
-
     $self->date($date);
 
+    my $offset = ( $page ? $page - 1 : 0 ) * $self->config->{'playlist'}->{'results'};
     my $results = $self->events->find(
         $self->date->day,
         $self->date->strftime('%m'),
+        $offset,
+        $self->config->{'playlist'}->{'results'},
     );
 
     #respond to several content-types
