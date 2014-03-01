@@ -10,11 +10,17 @@ use Data::Dumper;
 
 use namespace::autoclean;
 
+has 'action' => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => 'event',
+);
+
 sub find {
     my ( $self, $day, $month, $offset, $results ) = @_;
 
     my %arg = (
-        'action' => 'event',
+        'action' => $self->action,
         'day'    => $day,
         'month'  => $month
     );
@@ -23,7 +29,8 @@ sub find {
     $arg{'results'} = $results
         if defined $results;
 
-    $arg{'fields'} = [ qw(artist date description type ) ];
+    $arg{'fields'} = [ qw(artist date description type ) ]
+        if $self->action eq 'event';
 
     my $dayinmusic = WebService::ThisDayInMusic->new();
 

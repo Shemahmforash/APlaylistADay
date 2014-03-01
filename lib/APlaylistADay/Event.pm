@@ -16,6 +16,10 @@ has 'date' => (
     default => sub { return DateTime->now() },
 );
 
+sub model {
+    return 'events';    
+}
+
 sub get {
     my $self = shift;
 
@@ -37,11 +41,19 @@ sub get {
     $self->date($date);
 
     my $offset = ( $page ? $page - 1 : 0 ) * $self->config->{'playlist'}->{'results'};
-    my $results = $self->events->find(
+
+    my $model = $self->model();
+
+    my @args = (
         $self->date->day,
         $self->date->strftime('%m'),
-        $offset,
-        $self->config->{'playlist'}->{'results'},
+        $offset, );
+
+    push @args, $self->config->{'playlist'}->{'results'}
+        if $model eq 'events';
+
+    my $results = $self->$model->find(
+        @args,        
     );
 
     if( !$results || $results->{'status'}->{'code'} != 0 ) {
@@ -69,7 +81,7 @@ sub get {
     );
 }
 
-sub _pages_2_render{
+sub _pages_2_render {
     my ( $self, $pagesize, $total, $page ) = @_;
 
     $page ||= 1;
