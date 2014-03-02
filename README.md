@@ -13,7 +13,6 @@ A web app and service that each day generates a new playlist with songs based on
 * [Mojolicious](http://search.cpan.org/~sri/Mojolicious-4.24/lib/Mojolicious.pm)
 * [Moose](http://search.cpan.org/~ether/Moose-2.1005/lib/Moose.pm)
 * [MooseX::Privacy](http://search.cpan.org/~franckc/MooseX-Privacy-0.05/lib/MooseX/Privacy.pm)
-* [WebService::EchoNest](http://search.cpan.org/~nickl/WebService-EchoNest-0.007/lib/WebService/EchoNest.pm)
 * [JSON](http://search.cpan.org/~makamaka/JSON-2.90/lib/JSON.pm)
 * [LWP::UserAgent](http://search.cpan.org/~gaas/libwww-perl-6.05/lib/LWP/UserAgent.pm)
 * [LWP::Protocol::https](http://search.cpan.org/~gaas/LWP-Protocol-https-6.04/lib/LWP/Protocol/https.pm)

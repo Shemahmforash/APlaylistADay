@@ -12,13 +12,11 @@ WriteMakefile(
         'Mojolicious'                     => '4.58',
         'Moose'                           => '2.0603',
         'MooseX::Privacy'                 => '0.05',
-        'WebService::EchoNest'            => '0.007',
         'JSON'                            => '2.53',
         'LWP::UserAgent'                  => '6.04',
         'LWP::Protocol::https'            => '6.03',
         'DateTime'                        => '0.75',
         'Date::Parse'                     => '2.30',
-        'Redis'                           => '1.965'
     },
     test => { TESTS => 't/*.t' }
 );
