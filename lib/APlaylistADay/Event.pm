@@ -25,46 +25,46 @@ sub get {
 
     #TODO: check validity of day and month
     my ( $day, $month, $page ) = (
-        $self->stash('day'), $self->stash('month'), $self->stash('page') > 0 ? $self->stash('page') : 1
+        $self->stash('day'), $self->stash('month'),
+        $self->stash('page') > 0 ? $self->stash('page') : 1
     );
 
     my $date = DateTime->now();
     if ( $month && $day ) {
-        my $epoch= Date::Parse::str2time(  "$day $month 2014" );
+        my $epoch = Date::Parse::str2time("$day $month 2014");
 
         $date = DateTime->from_epoch(
-                        'epoch'     => $epoch,
-                        'locale'    => 'en_GB',
-                        'time_zone' => 'local',
-                    );
+            'epoch'     => $epoch,
+            'locale'    => 'en_GB',
+            'time_zone' => 'local',
+        );
     }
     $self->date($date);
 
-    my $offset = ( $page ? $page - 1 : 0 ) * $self->config->{'playlist'}->{'results'};
+    my $offset = ( $page ? $page - 1 : 0 )
+        * $self->config->{'playlist'}->{'results'};
 
     my $model = $self->model();
 
-    my @args = (
-        $self->date->day,
-        $self->date->strftime('%m'),
-        $offset, );
+    my @args = ( $self->date->day, $self->date->strftime('%m'), $offset, );
 
     push @args, $self->config->{'playlist'}->{'results'}
         if $model eq 'events';
 
-    my $results = $self->$model->find(
-        @args,        
-    );
+    my $results = $self->$model->find( @args, );
 
-    if( !$results || $results->{'status'}->{'code'} != 0 ) {
+    if ( !$results || $results->{'response'}->{'status'}->{'code'} != 0 ) {
+
         #TODO: error page
     }
 
-    my $pages = $self->_pages_2_render( $self->config->{'playlist'}->{'results'}, $results->{'response'}->{'pagination'}->{'total'}, $page );
+    my $pages
+        = $self->_pages_2_render( $self->config->{'playlist'}->{'results'},
+        $results->{'response'}->{'pagination'}->{'total'}, $page );
 
     #don't allow out of range pages
     $page = $pages->[-1]
-        if( $page > $pages->[-1] );
+        if ( $page > $pages->[-1] );
 
     #respond to several content-types
     $self->respond_to(
@@ -72,8 +72,8 @@ sub get {
         html => sub {
             $self->render(
                 'results' => $results,
-                'page'    => $page, 
-                'pages'   => $pages, 
+                'page'    => $page,
+                'pages'   => $pages,
                 'date'    => $self->date->strftime('%B, %e')
             );
         },

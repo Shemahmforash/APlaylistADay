@@ -12,7 +12,6 @@ A web app and service that each day generates a new playlist with songs based on
  It requires the following perl packages that you can find on cpan:
 * [Mojolicious](http://search.cpan.org/~sri/Mojolicious-4.24/lib/Mojolicious.pm)
 * [Moose](http://search.cpan.org/~ether/Moose-2.1005/lib/Moose.pm)
-* [MooseX::Privacy](http://search.cpan.org/~franckc/MooseX-Privacy-0.05/lib/MooseX/Privacy.pm)
 * [JSON](http://search.cpan.org/~makamaka/JSON-2.90/lib/JSON.pm)
 * [LWP::UserAgent](http://search.cpan.org/~gaas/libwww-perl-6.05/lib/LWP/UserAgent.pm)
 * [LWP::Protocol::https](http://search.cpan.org/~gaas/LWP-Protocol-https-6.04/lib/LWP/Protocol/https.pm)
@@ -25,7 +24,7 @@ A web app and service that each day generates a new playlist with songs based on
  2. Install every perl module in the requirements section using cpanminus
 
 ``` bash
-    sudo cpanm Mojolicious Moose MooseX::Privacy JSON LWP::UserAgent LWP::Protocol::https DateTime Date::Parse
+    sudo cpanm Mojolicious Moose JSON LWP::UserAgent LWP::Protocol::https DateTime Date::Parse
 ```
  3. Clone this project:
     `git clone https://github.com/Shemahmforash/APlaylistADay.git`

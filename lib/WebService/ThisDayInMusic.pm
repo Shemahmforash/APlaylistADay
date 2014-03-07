@@ -1,7 +1,6 @@
 package WebService::ThisDayInMusic;
 
 use Moose;
-use MooseX::Privacy;
 use LWP::UserAgent;
 use DateTime;
 use JSON qw(decode_json);
@@ -14,7 +13,6 @@ use namespace::autoclean;
 has 'base_url' => (
     is       => 'ro',
     isa      => 'Str',
-    traits   => [qw/Private/],
     required => 1,
     default  => 'http://thisdayinmusic.icdif.com/api/v0.1/'
 );
@@ -22,7 +20,6 @@ has 'base_url' => (
 has 'date' => (
     is      => 'ro',
     isa     => 'DateTime',
-    traits  => [qw/Private/],
     default => sub { return DateTime->now() },
 );
 
