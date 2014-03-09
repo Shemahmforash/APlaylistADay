@@ -1,79 +1,96 @@
 package APlaylistADay::Event;
 
+use Mojo::Base 'Mojolicious::Controller';
+
+use POSIX;
+
 use Moose;
-use MooseX::Privacy;
-use APlaylistADay::Artist;
-use URI::Escape ();
-use WebService::EchoNest;
+use DateTime;
+use Date::Parse;
+use DateTime::Locale;
 use Data::Dumper;
 
-use namespace::autoclean;
-
 has 'date' => (
-    is  => 'ro',
-    isa => 'Str',
+    is      => 'rw',
+    isa     => 'DateTime',
+    default => sub { return DateTime->now() },
 );
 
-has 'type' => (
-    is  => 'ro',
-    isa => 'Str',
-);
-
-has 'description' => (
-    is  => 'ro',
-    isa => 'Str',
-);
-
-has 'artist_name' => (
-    is  => 'rw',
-    isa => 'Str',
-);
-
-has 'artist' => (
-    is  => 'rw',
-    isa => 'APlaylistADay::Artist',
-);
-
-#using echonest api, finds the most likely artist referenced in the event text
-sub find_event_artist {
-    my ( $self, $echonest_key ) = @_;
-
-    return unless $echonest_key;
-
-    my $name = $self->artist_name;
-
-    unless ($name) {
-        my $text = URI::Escape::uri_escape_utf8( $self->description() );
-
-        my $echonest = WebService::EchoNest->new( api_key => $echonest_key );
-
-        my $data = $echonest->request(
-            'artist/extract',
-            'text'    => $text,
-            'sort'    => 'hotttnesss-desc',
-            'results' => 1,
-            'format'  => 'json',
-        );
-
-        if ( $data->{'response'}->{'status'}->{'code'} == 0 ) {
-            my $artist = shift $data->{'response'}->{'artists'};
-
-            $name = $artist->{'name'};
-        }
-        else {
-            my $log = Mojo::Log->new;
-            $log->error( 'Error connecting to echonest: '
-                    . $data->{'response'}->{'status'}->{'message'} );
-        }
-
-        $self->artist_name($name);
-    }
-
-    my $artist = APlaylistADay::Artist->new( 'name' => $name );
-    $self->artist($artist);
-
-    return $artist;
+sub model {
+    return 'events';    
 }
 
-no Moose;
-__PACKAGE__->meta->make_immutable;
+sub get {
+    my $self = shift;
+
+    #TODO: check validity of day and month
+    my ( $day, $month, $page ) = (
+        $self->stash('day'), $self->stash('month'),
+        $self->stash('page') > 0 ? $self->stash('page') : 1
+    );
+
+    my $date = DateTime->now();
+    if ( $month && $day ) {
+        my $epoch = Date::Parse::str2time("$day $month 2014");
+
+        $date = DateTime->from_epoch(
+            'epoch'     => $epoch,
+            'locale'    => 'en_GB',
+            'time_zone' => 'local',
+        );
+    }
+    $self->date($date);
+
+    my $offset = ( $page ? $page - 1 : 0 )
+        * $self->config->{'playlist'}->{'results'};
+
+    my $model = $self->model();
+
+    my @args = ( $self->date->day, $self->date->strftime('%m'), $offset, );
+
+    push @args, $self->config->{'playlist'}->{'results'}
+        if $model eq 'events';
+
+    my $results = $self->$model->find( @args, );
+
+    if ( !$results || $results->{'response'}->{'status'}->{'code'} != 0 ) {
+
+        #TODO: error page
+    }
+
+    my $pages
+        = $self->_pages_2_render( $self->config->{'playlist'}->{'results'},
+        $results->{'response'}->{'pagination'}->{'total'}, $page );
+
+    #don't allow out of range pages, use last page instead
+    $page = $pages->[-1]
+        if ( $page > $pages->[-1] );
+
+    #respond to several content-types
+    $self->respond_to(
+        json => { json => $results },
+        html => sub {
+            $self->render(
+                'results' => $results,
+                'page'    => $page,
+                'pages'   => $pages,
+                'date'    => $self->date->strftime('%B, %e')
+            );
+        },
+        any => { text => '', status => 204 }
+    );
+}
+
+sub _pages_2_render {
+    my ( $self, $pagesize, $total, $page ) = @_;
+
+    $page ||= 1;
+
+    my $total_pages = 1 + floor( $total / $pagesize );
+
+    my @pages = 1 .. $total_pages;
+
+    return \@pages,
+}
+
+1;

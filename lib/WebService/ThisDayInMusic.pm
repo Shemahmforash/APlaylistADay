@@ -1,7 +1,6 @@
 package WebService::ThisDayInMusic;
 
 use Moose;
-use MooseX::Privacy;
 use LWP::UserAgent;
 use DateTime;
 use JSON qw(decode_json);
@@ -14,46 +13,58 @@ use namespace::autoclean;
 has 'base_url' => (
     is       => 'ro',
     isa      => 'Str',
-    traits   => [qw/Private/],
     required => 1,
-    default  => 'http://icdif.com/thisdayinmusic/events/'
+    default  => 'http://thisdayinmusic.icdif.com/api/v0.1/'
 );
 
 has 'date' => (
     is      => 'ro',
     isa     => 'DateTime',
-    traits  => [qw/Private/],
     default => sub { return DateTime->now() },
 );
 
-has 'filters' => (
+has 'results' => (
+    'is' => 'rw',
+    'isa' => 'Int',
+    'default' => 0,
+);
+
+has 'offset' => (
+    'is' => 'rw',
+    'isa' => 'Int',
+    'default' => 0,
+);
+
+has 'fields' => (
     traits  => ['Array'],
     is      => 'ro',
     default => sub { return [] },
-    handles => { add_filters => 'push', }
+    handles => { add_field => 'push', }
 );
+
 
 #gets the full url
 sub url {
     my $self = shift;
-    my ( $day, $month ) = @_;
+    my ( $action, $day, $month ) = @_;
 
-    my $url = $self->base_url;
+    my $url = $self->base_url . $action . '/';
 
     my $query;
 
-    #add filters to the query string
-    my @filters = @{ $self->filters };
-    if ( scalar @filters ) {
-        for my $filter (@filters) {
-            $filter = sprintf( 'filters[]=%s', $filter );
-        }
-        $query = join( '&', @filters );
-    }
-
     #add date to the query string
     if ( defined $day && defined $month ) {
-        $query = sprintf( '%s&day=%s&month=%s', $query, $day, $month );
+        $query = sprintf( '%s&day=%02d&month=%02d', $query, $day, $month );
+    }
+
+    $query .= sprintf( '&offset=%d', $self->offset )
+        if $self->offset; 
+
+    $query .= sprintf( '&results=%d', $self->results )
+        if $self->results; 
+
+    for my $field ( @{ $self->fields } ) {
+        $query .= "&fields[]=$field";
     }
 
     $url = sprintf( '%s?%s', $url, $query )
@@ -63,12 +74,29 @@ sub url {
 }
 
 sub get {
-    my $self  = shift;
-    my %arg   = @_;
-    my $day   = $arg{'day'};
-    my $month = $arg{'month'};
+    my $self   = shift;
+    my %arg    = @_;
+    my $action = $arg{'action'};
+    my $day    = $arg{'day'};
+    my $month  = $arg{'month'};
+    my $fields = $arg{'fields'};
 
-    my $url = $self->url( $day, $month );
+    $self->offset( $arg{'offset'} )
+        if( defined $arg{'offset'} );
+
+    $self->results( $arg{'results'} )
+        if( $arg{'results'} );
+
+    if( $fields && ref $fields eq 'ARRAY' ) {
+        for my $field ( @{ $fields || [] } ) {
+            $self->add_field( $field );
+        }
+    }
+
+    die "Undefined action"
+        unless $action;
+
+    my $url = $self->url( $action, $day, $month );
     print STDERR $url, "\n";
 
     #get the results from server
@@ -95,8 +123,6 @@ sub get {
     }
     else {
         print STDERR $response->status_line;
- 
-#        Carp::carp $response->status_line;
     }
 
     return $events;

@@ -1,5 +1,5 @@
 % layout 'default';
-% title 'Playlist';
+% title 'Events';
 
     <div class="container">
         <div class="row clearfix">
@@ -11,10 +11,10 @@
 
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li>
+                            <li class="active">
                                 <a href="/event/">Events</a>
                             </li>
-                            <li class="active">
+                            <li>
                                 <a href="/playlist/">Playlist</a>
                             </li>
                             <li>
@@ -34,53 +34,67 @@
                 </div>
                 <div class="page-header">
                     <h1>
-                        <%= $date %> <small>Playlist based on the events that happened on this day in music...</small>
+                        <%= $date %> <small>Events that happened on this day in music...</small>
                     </h1>
                 </div>
-            </div>
-<%
-    my $playlist;
-    for my $track (@{ $results->{'response'}->{'tracks'} } ) {
-        $playlist .= ','
-            if $playlist;         
 
-        $track->{'spotifyId'} =~ s/spotify\-WW\:track\://;
-
-        $playlist .= $track->{'spotifyId'};
-    }
-%>
-
-            <div class="col-sm-6">
-
-    % my $playlist;
-    % my $count = 1;
-    % for my $track (@{ $results->{'response'}->{'tracks'} } ) {
-    %    $playlist .= ','
-    %        if $playlist;         
-
-    %    $track->{'spotifyId'} =~ s/spotify\-WW\:track\://;
-
-    %    $playlist .= $track->{'spotifyId'};
+    %#TODO: change color in birth and death, according to $result->{'type'}
+    % for my $result (@{ $results->{'response'}->{'events'} } ) {
                 <div class="media well">
+                    <span style="float: right" class="glyphicon glyphicon-circle-arrow-<%= $result->{'type'} eq 'Birth' ? 'up' : 'down' =%>" title="<%= $result->{'type'} =%>"></span>
+    %       if( $result->{'image'} ) {
+                <img src="<%= $result->{'image'} %>">
+    %       }
+
                     <div class="media-body">
-                        <%= $count . ' - ' . $track->{'event'} %>          
-                    </h4>
+                        <h4 class="media-heading">
+                            <%= $result->{'date'} =%>
+    %       if( $result->{'name'} ) {
+                            -
+                <%= $result->{'name'} =%>
+    %       }
+                        </h4>
+                <%= $result->{'description'} =%>
                     </div>
                 </div>
-    % $count++;
     % }
-            </div>
-            <div class="col-sm-6">
-                <iframe src="https://embed.spotify.com/?uri=spotify:trackset:Playlist for <%= $date %>:<%= $playlist %>" style="width:640px; height:520px;" frameborder="0" allowtransparency="true"></iframe>
+
+            <ul class="pagination">
+
+% if( $page == $pages->[0] ) {
+    <li class="disabled"><a href="#">&laquo;</a></li>
+% }
+% else {
+    <li><a href="<%= url_for($page ? $page - 1 : '')%>">&laquo;</a></li>
+% }
+
+% for my $p (@{ $pages || [] } ) {
+    % if( $page == $p ) {
+        <li class="active"><span><%= $p %><span class="sr-only">(current)</span></span></li>
+    % }
+    % else {
+        <li><a href="<%= url_for( $p ) %>"><%= $p %></a></li>
+        
+    % }
+% }
+
+% if( $page == $pages->[-1] ) {
+    <li class="disabled"><a href="#">&raquo;</a></li>
+% }
+% else {
+    <li><a href="<%= url_for( $page + 1 )%>">&raquo;</a></li>
+% }
+
+            </ul>
+
             </div>
         </div>
     </div>
-</div>
 
 <script type="text/javascript">
-    $(function(){
-        $('#dp1').datepicker({
-            format: 'yyyy-mm-dd'
-        });
+  $(function() {
+    $('#datetimepicker4').datetimepicker({
+      pickTime: false
     });
+  });
 </script>
