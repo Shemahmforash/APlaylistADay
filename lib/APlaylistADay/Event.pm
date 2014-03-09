@@ -62,7 +62,7 @@ sub get {
         = $self->_pages_2_render( $self->config->{'playlist'}->{'results'},
         $results->{'response'}->{'pagination'}->{'total'}, $page );
 
-    #don't allow out of range pages
+    #don't allow out of range pages, use last page instead
     $page = $pages->[-1]
         if ( $page > $pages->[-1] );
 

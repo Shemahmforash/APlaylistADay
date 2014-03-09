@@ -1,4 +1,3 @@
-
 % layout 'default';
 % title 'About This Day In Music';
 
@@ -33,13 +32,13 @@
                         This Day In Music
                     </h1>
                     <p>
-                        I created this project with the purpose of showing the events that happened on this day during the history of music as well as providing spotify playlists based on those same events.
+                        This project was created with the purpose of showing the events that happened on this day during the history of music as well as providing daily playlists based on those same events.
                     </p>
                     <p>
-                        There is also a twitter account alongside this site: @...
+                        Two twitter accounts were created alongside this site: <a href="https://twitter.com/today_in_music">@today_in_music</a> and <a href="https://twitter.com/playlist_a_day">@playlist_a_day</a>
                     </p>
                     <p>
-                        The code of this project is available online at https://github.com/Shemahmforash/APlaylistADay and https://github.com/Shemahmforash/ThisDayInMusic feel free to fork the projects and cohoperate with me.
+                        The code of this project is available online at <a href="https://github.com/Shemahmforash/APlaylistADay">https://github.com/Shemahmforash/APlaylistADay</a> and https://github.com/Shemahmforash/ThisDayInMusic feel free to fork the projects and cohoperate with me.
                     </p>
                     <p>
                         If ou have any doubt or suggestion feel free to reach me at: ...
