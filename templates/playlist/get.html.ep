@@ -24,17 +24,9 @@
                     </div>
 
                 </nav>
-                <div class="well">
-                    <div id="datetimepicker4" class="input-append">
-                        <input data-format="yyyy-MM-dd" type="text"></input>
-                        <span class="add-on">
-                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-                        </span>
-                    </div>
-                </div>
                 <div class="page-header">
                     <h1>
-                        <%= $date %> <small>Playlist based on the events that happened on this day in music...</small>
+                        <%= $date->strftime('%B, %e') %> <small>Playlist based on the events that happened on this day in music...</small>
                     </h1>
                 </div>
             </div>

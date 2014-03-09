@@ -74,7 +74,7 @@ sub get {
                 'results' => $results,
                 'page'    => $page,
                 'pages'   => $pages,
-                'date'    => $self->date->strftime('%B, %e')
+                'date'    => $self->date,
             );
         },
         any => { text => '', status => 204 }

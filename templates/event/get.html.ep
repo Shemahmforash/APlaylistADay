@@ -20,21 +20,18 @@
                             <li>
                                 <a href="/about/">About</a>
                             </li>
+
+                            <li class="nav-choice">
+                                <input type="text" class="span2" value="<%= $date->strftime('%Y-%m-%d') %>" id="dp1">
+                            </li>
                         </ul>
                     </div>
 
                 </nav>
-                <div class="well">
-                    <div id="datetimepicker4" class="input-append">
-                        <input data-format="yyyy-MM-dd" type="text"></input>
-                        <span class="add-on">
-                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-                        </span>
-                    </div>
-                </div>
+
                 <div class="page-header">
                     <h1>
-                        <%= $date %> <small>Events that happened on this day in music...</small>
+                        <%= $date->strftime('%B, %e') %> <small>Events that happened on this day in music...</small>
                     </h1>
                 </div>
 
@@ -93,8 +90,18 @@
 
 <script type="text/javascript">
   $(function() {
-    $('#datetimepicker4').datetimepicker({
-      pickTime: false
+
+    $('#dp1').datepicker({'format': 'yyyy-mm-dd'}).on('changeDate', function(ev) {
+
+        var newDate = new Date(ev.date)
+
+        var monthNames = [ "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December" ];
+
+        var url = "/event/" + monthNames[newDate.getMonth()] + "/" + newDate.getUTCDate();
+
+        window.location = url;
     });
+
   });
 </script>
