@@ -11,7 +11,6 @@ WriteMakefile(
         'HTTP::Message'                   => '6.03',
         'Mojolicious'                     => '4.58',
         'Moose'                           => '2.0603',
-        'MooseX::Privacy'                 => '0.05',
         'JSON'                            => '2.53',
         'LWP::UserAgent'                  => '6.04',
         'LWP::Protocol::https'            => '6.03',
