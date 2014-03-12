@@ -17,7 +17,7 @@ has 'date' => (
 );
 
 sub model {
-    return 'events';    
+    return 'events';
 }
 
 sub get {
@@ -26,7 +26,9 @@ sub get {
     #TODO: check validity of day and month
     my ( $day, $month, $page ) = (
         $self->stash('day'), $self->stash('month'),
-        $self->stash('page') > 0 ? $self->stash('page') : 1
+        ( $self->stash('page') && $self->stash('page') > 0 )
+        ? $self->stash('page')
+        : 1
     );
 
     my $date = DateTime->now();
@@ -53,9 +55,14 @@ sub get {
 
     my $results = $self->$model->find( @args, );
 
-    if ( !$results || $results->{'response'}->{'status'}->{'code'} != 0 ) {
+    if (   $results->{'is_error'}
+        || $results->{'data'}->{'response'}->{'status'}->{'code'} != 0 )
+    {
+
         #TODO: error page
     }
+
+    $results = $results->{'data'};
 
     my $pages
         = $self->_pages_2_render( $self->config->{'playlist'}->{'results'},
@@ -89,7 +96,7 @@ sub _pages_2_render {
 
     my @pages = 1 .. $total_pages;
 
-    return \@pages,
+    return \@pages,;
 }
 
 1;

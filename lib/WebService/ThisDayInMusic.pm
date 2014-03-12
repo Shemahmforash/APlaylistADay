@@ -54,7 +54,7 @@ sub url {
 
     #add date to the query string
     if ( defined $day && defined $month ) {
-        $query = sprintf( '%s&day=%02d&month=%02d', $query, $day, $month );
+        $query = sprintf( 'day=%02d&month=%02d', $day, $month );
     }
 
     $query .= sprintf( '&offset=%d', $self->offset )
@@ -97,35 +97,40 @@ sub get {
         unless $action;
 
     my $url = $self->url( $action, $day, $month );
-    print STDERR $url, "\n";
+#    print STDERR $url, "\n";
 
     #get the results from server
     my $ua = LWP::UserAgent->new;
     $ua->timeout(10);
     $ua->env_proxy;
 
-    print STDERR $ua->timeout(), "\n";
+#    print STDERR $ua->timeout(), "\n";
 
     my $response = $ua->get($url);
 
-    print STDERR "Response: ";
-    print STDERR Dumper $response;
+#    print STDERR "Response: ";
+#    print STDERR Dumper $response;
 
-    my $events = [];
+    my $output;
 
     if ( $response->is_success ) {
         my $response = $response->decoded_content;
-        $events = decode_json $response;
+        my $events = decode_json $response;
 
-        print STDERR "Events: ";
-        print STDERR Dumper $events;
+#        print STDERR "Events: ";
+#        print STDERR Dumper $events;
+
+        $output = { 'is_success' => 1, 'is_error' => 0, 'data' => $events };
+        
+        
 
     }
     else {
-        print STDERR $response->status_line;
+#        print STDERR $response->status_line;
+        $output = { 'is_success' => 0, 'is_error' => 1 };
     }
 
-    return $events;
+    return $output;
 }
 
 no Moose;
