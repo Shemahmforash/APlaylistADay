@@ -23,6 +23,8 @@ sub model {
 sub get {
     my $self = shift;
 
+    my $log = Mojo::Log->new;
+
     #TODO: check validity of day and month
     my ( $day, $month, $page ) = (
         $self->stash('day'), $self->stash('month'),
@@ -59,7 +61,14 @@ sub get {
         || $results->{'data'}->{'response'}->{'status'}->{'code'} != 0 )
     {
 
-        #TODO: error page
+        my $message = "Error contacting webservice";
+
+        $message = $results->{'data'}->{'response'}->{'status'}->{'status'}
+            if $results->{'data'};
+
+        $log->error($message);
+
+        return $self->render_exception($message);
     }
 
     $results = $results->{'data'};
@@ -92,7 +101,7 @@ sub _pages_2_render {
 
     $page ||= 1;
 
-    my $total_pages = 1 + floor( $total / $pagesize );
+    my $total_pages = ceil( $total / $pagesize );
 
     my @pages = 1 .. $total_pages;
 

@@ -70,6 +70,8 @@ sub url {
     $url = sprintf( '%s?%s', $url, $query )
         if $query;
 
+    print STDERR "url: $url\n";
+
     return $url;
 }
 
