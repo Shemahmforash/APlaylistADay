@@ -54,7 +54,6 @@ sub get {
     my $results = $self->$model->find( @args, );
 
     if ( !$results || $results->{'response'}->{'status'}->{'code'} != 0 ) {
-
         #TODO: error page
     }
 

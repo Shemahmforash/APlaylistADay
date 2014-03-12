@@ -31,9 +31,9 @@ sub startup {
     $r->get('/')->to('event#get');
     $r->get('/about/')->to('about#show');
     $r->get('/event/')->to('event#get');
-    $r->get('/event/:page')->to('event#get');
-    $r->get('/event/:month/:day')->to('event#get');
-    $r->get('/event/:month/:day/:page')->to('event#get');
+    $r->get('/event/:page/')->to('event#get');
+    $r->get('/event/:month/:day/')->to('event#get');
+    $r->get('/event/:month/:day/:page/')->to('event#get');
     $r->get('/playlist/')->to('playlist#get');
     $r->get('/playlist/:month/:day')->to('playlist#get');
     $r->get('/:page')->to('event#get');
