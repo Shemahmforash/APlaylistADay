@@ -4,30 +4,8 @@
     <div class="container">
         <div class="row clearfix">
             <div class="col-md-12 column">
-                <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="/">This Day In Music</a>
-                    </div>
 
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                            <li class="active">
-                                <a href="/event/">Events</a>
-                            </li>
-                            <li>
-                                <a href="/playlist/">Playlist</a>
-                            </li>
-                            <li>
-                                <a href="/about/">About</a>
-                            </li>
-
-                            <li class="nav-choice">
-                                <input type="text" class="span2" value="<%= $date->strftime('%Y-%m-%d') %>" id="dp1" style="margin-top: 12px;">
-                            </li>
-                        </ul>
-                    </div>
-
-                </nav>
+%= $self->render('partials/top-menu', partial => 1, 'active' => 'events', 'include_datepicker' => 1 )
 
                 <div class="page-header">
                     <h1>
