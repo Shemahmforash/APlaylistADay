@@ -1,0 +1,27 @@
+<ul class="pagination">
+
+% if( $page == $pages->[0] ) {
+    <li class="disabled"><a href="#">&laquo;</a></li>
+% }
+% else {
+    <li><a href="<%= url_for($page ? $page - 1 : '')%>">&laquo;</a></li>
+% }
+
+% for my $p (@{ $pages || [] } ) {
+    % if( $page == $p ) {
+        <li class="active"><span><%= $p %><span class="sr-only">(current)</span></span></li>
+    % }
+    % else {
+        <li><a href="<%= url_for( $p ) %>"><%= $p %></a></li>
+        
+    % }
+% }
+
+% if( $page == $pages->[-1] ) {
+    <li class="disabled"><a href="#">&raquo;</a></li>
+% }
+% else {
+    <li><a href="<%= url_for( $page + 1 )%>">&raquo;</a></li>
+% }
+
+</ul>

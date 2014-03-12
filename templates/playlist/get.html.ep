@@ -44,7 +44,6 @@
 
             <div class="col-sm-6">
 
-    % my $playlist;
     % my $count = 1;
     % for my $track (@{ $results->{'response'}->{'tracks'} } ) {
     %    $playlist .= ','
@@ -68,11 +67,3 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $(function(){
-        $('#dp1').datepicker({
-            format: 'yyyy-mm-dd'
-        });
-    });
-</script>
