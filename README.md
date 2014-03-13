@@ -19,12 +19,15 @@ A web app and service that each day generates a new playlist with songs based on
 * [Date::Parse](http://search.cpan.org/~gbarr/TimeDate-2.30/lib/Date/Parse.pm)
 
 #Installation
- 1. Install cpanminus. On a Debian-based Linux distribution you can do:
-     `sudo apt-get install cpanminus`
+ 1. Install cpanminus. On Linux and Mac OSX you can install it with:
+
+``` bash
+    \curl -L http://cpanmin.us | perl - App::cpanminus
+```
  2. Install every perl module in the requirements section using cpanminus
 
 ``` bash
-    sudo cpanm Mojolicious Moose JSON LWP::UserAgent LWP::Protocol::https DateTime Date::Parse
+    cpanm Mojolicious Moose JSON LWP::UserAgent LWP::Protocol::https DateTime Date::Parse
 ```
  3. Clone this project:
     `git clone https://github.com/Shemahmforash/APlaylistADay.git`
