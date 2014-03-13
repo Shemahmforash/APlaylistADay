@@ -13,21 +13,11 @@
                     </h1>
                 </div>
             </div>
-<%
-    my $playlist;
-    for my $track (@{ $results->{'response'}->{'tracks'} } ) {
-        $playlist .= ','
-            if $playlist;         
-
-        $track->{'spotifyId'} =~ s/spotify\-WW\:track\://;
-
-        $playlist .= $track->{'spotifyId'};
-    }
-%>
 
             <div class="col-sm-6">
 
     % my $count = 1;
+    % my $playlist = '';
     % for my $track (@{ $results->{'response'}->{'tracks'} } ) {
     %    $playlist .= ','
     %        if $playlist;         
@@ -41,7 +31,7 @@
                     </h4>
                     </div>
                 </div>
-    % $count++;
+    %   $count++;
     % }
             </div>
             <div class="col-sm-6">
