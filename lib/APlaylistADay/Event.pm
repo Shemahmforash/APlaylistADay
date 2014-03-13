@@ -25,13 +25,19 @@ sub get {
 
     my $log = Mojo::Log->new;
 
-    #TODO: check validity of day and month
     my ( $day, $month, $page ) = (
         $self->stash('day'), $self->stash('month'),
-        ( $self->stash('page') && $self->stash('page') > 0 )
-        ? $self->stash('page')
-        : 1
+        defined $self->stash('page') ? $self->stash('page') : 1
     );
+
+    #validates parameters
+    my $validation = $self->_validate_parameters(
+        'page'  => $page,
+        'day'   => $day,
+        'month' => $month
+    );
+    return $self->render_exception( $validation->{'status'} )
+        if $validation->{'is_error'};
 
     my $date = DateTime->now();
     if ( $month && $day ) {
@@ -57,6 +63,7 @@ sub get {
 
     my $results = $self->$model->find( @args, );
 
+    #process errors
     if (   $results->{'is_error'}
         || $results->{'data'}->{'response'}->{'status'}->{'code'} != 0 )
     {
@@ -76,10 +83,6 @@ sub get {
     my $pages
         = $self->_pages_2_render( $self->config->{'playlist'}->{'results'},
         $results->{'response'}->{'pagination'}->{'total'}, $page );
-
-    #don't allow out of range pages, use last page instead
-    $page = $pages->[-1]
-        if ( $page > $pages->[-1] );
 
     #respond to several content-types
     $self->respond_to(
@@ -106,6 +109,40 @@ sub _pages_2_render {
     my @pages = 1 .. $total_pages;
 
     return \@pages,;
+}
+
+sub _validate_parameters {
+    my $self = shift;
+    my %arg  = @_;
+
+    my $page  = $arg{'page'};
+    my $day   = $arg{'day'};
+    my $month = $arg{'month'};
+
+    my $error;
+
+    my $log = Mojo::Log->new;
+
+    if ( $page !~ /\d+/ || $page < 1 ) {
+        $error = "Page ( $page ) must be a positive integer";
+        $log->error($error);
+    }
+
+    if ( $day && ( $day !~ /\d+/ || $day < 1 || $day > 31 ) ) {
+        $error
+            = "Day ( $day ) must be a positive integer in the interval [1,31]";
+        $log->error($error);
+    }
+
+    if ( $month && $month !~ /\w+/ ) {
+        $error = "Month ( $month ) must be a string";
+        $log->error($error);
+    }
+
+    my %result = ( 'is_error' => $error ? 1 : 0, );
+
+    $result{'status'} = $error
+        if $error;
 }
 
 1;
