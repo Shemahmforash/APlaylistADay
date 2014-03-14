@@ -1,4 +1,5 @@
-<ul class="pagination">
+<div class="text-center">
+    <ul class="pagination">
 
 % if( $page == $pages->[0] ) {
     <li class="disabled"><a href="#">&laquo;</a></li>
@@ -24,4 +25,5 @@
     <li><a href="<%= url_for( $page + 1 )%>">&raquo;</a></li>
 % }
 
-</ul>
+    </ul>
+</div>

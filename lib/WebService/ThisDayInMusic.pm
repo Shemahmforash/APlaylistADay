@@ -17,12 +17,6 @@ has 'base_url' => (
     default  => 'http://thisdayinmusic.icdif.com/api/v0.1/'
 );
 
-has 'date' => (
-    is      => 'ro',
-    isa     => 'DateTime',
-    default => sub { return DateTime->now() },
-);
-
 has 'results' => (
     'is' => 'rw',
     'isa' => 'Int',
@@ -43,7 +37,7 @@ has 'fields' => (
 );
 
 
-#gets the full url
+#builds the full url
 sub url {
     my $self = shift;
     my ( $action, $day, $month ) = @_;
@@ -95,11 +89,10 @@ sub get {
         }
     }
 
-    die "Undefined action"
+    croak "Undefined action"
         unless $action;
 
     my $url = $self->url( $action, $day, $month );
-#    print STDERR $url, "\n";
 
     #get the results from server
     my $ua = LWP::UserAgent->new;
@@ -123,9 +116,6 @@ sub get {
 #        print STDERR Dumper $events;
 
         $output = { 'is_success' => 1, 'is_error' => 0, 'data' => $events };
-        
-        
-
     }
     else {
 #        print STDERR $response->status_line;
