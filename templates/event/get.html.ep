@@ -39,7 +39,14 @@
   $(function() {
     $('#dp1').datepicker({'format': 'yyyy-mm-dd'}).on('changeDate', function(ev) {
 
+        Date.prototype.addHours= function(h){
+            this.setHours(this.getHours()+h);
+            return this;
+        }
+
         var newDate = new Date(ev.date)
+        //to avoid problems with daylight saving hour change
+        newDate.addHours( 1 );
 
         var monthNames = [ "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December" ];
