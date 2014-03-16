@@ -1,2 +1,12 @@
 /*required by navbar fixed on top*/
 body { padding-top: 70px; }
+
+#dp1 {
+    margin-top: 12px;
+    margin-left: 20px;
+}
+
+.twitter {
+    margin-top: 15px;
+    margin-left: 40px;
+}

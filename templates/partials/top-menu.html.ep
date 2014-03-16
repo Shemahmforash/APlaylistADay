@@ -18,9 +18,13 @@
 
 %       if( $include_datepicker ) {
             <li class="nav-choice">
-                <input type="text" class="span2" value="<%= $date->strftime('%Y-%m-%d') %>" id="dp1" style="margin-top: 12px;">
+                <input type="text" value="<%= $date->strftime('%Y-%m-%d') %>" id="dp1">
             </li>
 %       }
+            <li class="twitter">
+                <a href="https://twitter.com/today_in_music" class="twitter-follow-button" data-show-count="false">Follow @today_in_music</a>
+                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+            </li>
         </ul>
     </div>
 
