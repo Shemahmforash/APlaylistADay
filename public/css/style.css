@@ -6,7 +6,11 @@ body { padding-top: 70px; }
     margin-left: 20px;
 }
 
-.twitter {
+.twitter_follow {
     margin-top: 15px;
     margin-left: 40px;
+}
+
+.tweet {
+    float: right;    
 }

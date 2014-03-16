@@ -25,6 +25,21 @@
     %       }
                         </h4>
                 <%= $result->{'description'} =%>
+
+
+%       my $message = sprintf('%s - %s', $result->{'date'}, $result->{'description'} );
+%       if( length( $message ) + length( ' #thisdayinmusic' ) < 140 ) {
+%          $message .= ' #thisdayinmusic';
+%       }
+%       if( length( $message ) + length( ' via @today_in_music' ) < 140 ) {
+%          $message .= ' via @today_in_music';
+%       }
+
+                        <div class="tweet">
+                            <a href="https://twitter.com/intent/tweet?text=<%= $message %>" class="twitter-hashtag-button" data-related="today_in_music" style="float:right">Tweet</a>
+                            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                        </div>
+
                     </div>
                 </div>
     % }
