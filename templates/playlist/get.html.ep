@@ -1,6 +1,3 @@
-% layout 'default';
-% title 'Playlist';
-
     <div class="container">
         <div class="row clearfix">
             <div class="col-md-12 column">
@@ -54,7 +51,11 @@
 
                     <iframe src="https://embed.spotify.com/?uri=spotify:trackset:Playlist a Day for <%= $date %>:<%= $playlist %>" style="width:640px; height:520px;" frameborder="0" allowtransparency="true"></iframe>
 
-                    <a href="https://twitter.com/intent/tweet?text=<%= $message %>" class="twitter-hashtag-button" data-related="playlist_a_day">Tweet Playlist</a>
+
+%#                   <a href="https://twitter.com/intent/tweet?text=<%= $message %>" class="twitter-hashtag-button" data-related="playlist_a_day">Tweet Playlist</a>
+ %#                   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-via="playlist_a_day" data-hashtags="playlistaday">Tweet</a>
                     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
                 </div>
@@ -62,3 +63,6 @@
         </div>
     </div>
 </div>
+
+% layout 'default', 'description' => 'Playlist bases on events that happened on this day in history, featuring artists such as ' . join(', ', @artists, 'among others.');
+% title 'Playlist a Day for ' . $date->strftime('%B, %e');

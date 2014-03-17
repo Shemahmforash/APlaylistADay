@@ -1,6 +1,3 @@
-% layout 'default';
-% title 'Events';
-
     <div class="container">
         <div class="row clearfix">
             <div class="col-md-12 column">
@@ -72,3 +69,6 @@
     });
   });
 </script>
+
+% layout 'default', 'description' => 'Events that happened on this day in the history of music.';
+% title 'Events for ' . $date->strftime('%B, %e');
