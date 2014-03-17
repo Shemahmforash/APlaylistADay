@@ -19,24 +19,45 @@
     % #create the playlist as a comma separated string and render the event for each track
     % my $count = 1;
     % my $playlist = '';
+    % my @artists;
+    <div class="well">
+    <ul>
     % for my $track (@{ $results->{'response'}->{'tracks'} } ) {
     %    $playlist .= ','
-    %        if $playlist;         
+    %        if $playlist;
+
+    %#choose 4 artists to tweet
+    %    push @artists, $track->{'artist'}
+    %       if $count < 5;
 
     %    $track->{'spotifyId'} =~ s/spotify\-WW\:track\://;
 
     %    $playlist .= $track->{'spotifyId'};
-                <div class="media well">
-                    <div class="media-body">
-                        <%= $count . ' - ' . $track->{'event'} %>          
-                    </h4>
-                    </div>
-                </div>
+        <li>
+            <%= $count . ' - ' . $track->{'event'} %>          
+        </li>
     %    $count++;
     % }
+    </ul>
+
+    </div>
             </div>
             <div class="col-sm-6">
-                <iframe src="https://embed.spotify.com/?uri=spotify:trackset:Playlist a Day for <%= $date %>:<%= $playlist %>" style="width:640px; height:520px;" frameborder="0" allowtransparency="true"></iframe>
+%       my $message = '#playlistaday for ' . $date->strftime('%B, %e') . ' featuring: ' . join(', ', @artists) . ' and many others. ' . url_for()->to_abs;
+%       if( length( $message ) + length( ' via @today_in_music' ) <= 140 ) {
+%          $message .= ' via @today_in_music';
+%       }
+%       if( length( $message ) + length( ' #thisdayinmusic' ) <= 140 ) {
+%          $message .= ' #thisdayinmusic';
+%       }
+                <div class="text-center">
+
+                    <iframe src="https://embed.spotify.com/?uri=spotify:trackset:Playlist a Day for <%= $date %>:<%= $playlist %>" style="width:640px; height:520px;" frameborder="0" allowtransparency="true"></iframe>
+
+                    <a href="https://twitter.com/intent/tweet?text=<%= $message %>" class="twitter-hashtag-button" data-related="playlist_a_day">Tweet Playlist</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+                </div>
             </div>
         </div>
     </div>
