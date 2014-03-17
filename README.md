@@ -1,4 +1,4 @@
-APlaylistADay
+APlaylistADay [![Build Status](https://travis-ci.org/Shemahmforash/APlaylistADay.png?branch=master)](https://travis-ci.org/Shemahmforash/APlaylistADay)
 =============
 
 A web app and service that each day generates a new playlist with songs based on events that happened on this day in history/music.
