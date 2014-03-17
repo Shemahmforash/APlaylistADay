@@ -1,4 +1,4 @@
-% layout 'default';
+% layout 'default', 'description' => 'About This Day In Music';
 % title 'About This Day In Music';
 
     <div class="container">
@@ -15,10 +15,10 @@
                         This project was created with the purpose of showing the events that happened in this day during the history of music as well as providing daily playlists based on those same events.
                     </p>
                     <p>
-                        Two twitter accounts were created alongside this site: <a href="https://twitter.com/today_in_music">@today_in_music</a> and <a href="https://twitter.com/playlist_a_day">@playlist_a_day</a>
+                        Two twitter accounts were created alongside this site: <a href="https://twitter.com/today_in_music">@today_in_music</a> and <a href="https://twitter.com/playlist_a_day">@playlist_a_day</a>, in order to allow one to follow the events and the playlists easily.
                     </p>
                     <p>
-                        The code of this project is available online at <a href="https://github.com/Shemahmforash/APlaylistADay">https://github.com/Shemahmforash/APlaylistADay</a> and <a href="https://github.com/Shemahmforash/ThisDayInMusic">https://github.com/Shemahmforash/ThisDayInMusic</a> feel free to fork the projects and cohoperate with me.
+                        The code of this project is available online at the following repositories<a href="https://github.com/Shemahmforash/APlaylistADay">https://github.com/Shemahmforash/APlaylistADay</a> and <a href="https://github.com/Shemahmforash/ThisDayInMusic">https://github.com/Shemahmforash/ThisDayInMusic</a>. Feel free to fork them and cohoperate with me.
                     </p>
                     <p>
                         If ou have any doubt or suggestion, you can reach me at: cmrosao [ at ] gmail [dot] com.
