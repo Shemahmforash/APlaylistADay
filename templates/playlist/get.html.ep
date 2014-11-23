@@ -27,7 +27,7 @@
     %    push @artists, $track->{'artist'}
     %       if $count < 5;
 
-    %    $track->{'spotifyId'} =~ s/spotify\-WW\:track\://;
+    %    $track->{'spotifyId'} =~ s/spotify(\-WW)?\:track\://;
 
     %    $playlist .= $track->{'spotifyId'};
         <li>
