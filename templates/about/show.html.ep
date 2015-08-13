@@ -5,8 +5,7 @@
         <div class="row clearfix">
             <div class="col-md-12 column">
 
-%= $self->render('partials/top-menu', partial => 1, 'active' => 'about', 'include_datepicker' => 0, 'date' => '' )
-
+%= include 'partials/top-menu', 'active' => 'about', , 'include_datepicker' => 0, 'date' => ''
                 <div class="jumbotron">
                     <h1>
                         This Day In Music

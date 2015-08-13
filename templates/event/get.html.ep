@@ -2,7 +2,7 @@
         <div class="row clearfix">
             <div class="col-md-12 column">
 
-%= $self->render('partials/top-menu', partial => 1, 'active' => 'events', 'include_datepicker' => 1 )
+%= include 'partials/top-menu', 'active' => 'events', 'include_datepicker' => 1 
 
                 <div class="page-header">
                     <h1>
@@ -41,7 +41,7 @@
                 </div>
     % }
 
-%= $self->render('partials/pagination', partial => 1)
+%= include 'partials/pagination'
 
             </div>
         </div>
