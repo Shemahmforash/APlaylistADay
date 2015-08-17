@@ -45,7 +45,7 @@
 
         <div id="footer">
             <div class="container">
-                <a href="http://echonest.com" target="_blank">
+                <a href="http://the.echonest.com" target="_blank">
                     <img src="/img/EN_P_on_Dark_Transparent.png" title="Powered by Echonest" alt="Powered by Echonest" class="center-block"/>
                 </a>
             </div>
